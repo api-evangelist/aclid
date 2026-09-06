@@ -64,5 +64,14 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Aclid is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+Aclid is a biosecurity and biosafety compliance automation platform for the synthetic biology supply
+chain. Gene synthesis providers, biofoundries and research institutions use Aclid to screen DNA/RNA
+orders for pathogenic, toxic and export-controlled sequence elements, to verify the customers placing
+those orders against international sanctions and watchlists, and to run and document the compliance
+review the US Framework for Nucleic Acid Synthesis Screening expects.
+
+- Website: https://www.aclid.bio/
+- API reference: https://api.aclid.bio/docs
+- OpenAPI 3.1.0 (harvested 2026-09-06): https://api.aclid.bio/openapi.json
+- Dashboard: https://dash.aclid.bio
+- Status: https://status.aclid.bio

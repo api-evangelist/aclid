@@ -1,0 +1,33 @@
+generated: '2026-09-06'
+method: searched
+source: https://api.aclid.bio/docs
+limit_count: 0
+rate_limits: []
+headers: []
+status_on_exhaustion: null
+retry_after: false
+note: >-
+  Aclid documents no request rate limit. Searched the full OpenAPI (https://api.aclid.bio/openapi.json,
+  66KB, 18 operations) and its rendered reference: zero occurrences of "rate limit", "429",
+  "X-RateLimit", "RateLimit-" or "Retry-After", and no 429 response on any operation. An agent has
+  no runtime signal to back off on.
+payload_limits:
+- scope: per screen request
+  limit: 1000000000
+  unit: base pairs
+  detail: Total base pair count, across all sequences, may not exceed 1,000,000,000.
+  source: 'POST /v2/screen_fasta, /v2/screen_csv, /v2/screen_inline descriptions'
+- scope: per sequence
+  limit: 30
+  unit: base pairs (minimum)
+  detail: FASTA sequences must each be at least 30 base pairs; FASTQ sequences may be any non-zero length.
+- scope: per page
+  limit: 100
+  unit: items
+  detail: List Screens / List Customers `limit` parameter is bounded 10..100.
+payload_limits_note: >-
+  These are size ceilings on a single request, not a rate. They are recorded separately so they are
+  not mistaken for the rate-limit signal an agent needs.
+evidence:
+- {url: 'https://api.aclid.bio/openapi.json', status: 200}
+- {url: 'https://api.aclid.bio/docs', status: 200}

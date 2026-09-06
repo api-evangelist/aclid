@@ -1,0 +1,195 @@
+generated: '2026-09-06'
+method: searched
+source: https://api.aclid.bio/docs
+derived_from: openapi/aclid-openapi.yml
+note: >-
+  Cross-cutting request/response semantics for the Aclid API v2 (OpenAPI 3.1.0, info.version 2.2.1).
+  Everything below is either published prose in the provider's own API reference or read directly
+  out of the contract; nothing is inferred from a similar API.
+authentication:
+  style: api-key
+  header: Authorization
+  prefix: none (raw key value)
+  transport: https-only
+  live_test_mode: selected by which key is used
+  see: authentication/aclid-authentication.yml
+idempotency:
+  supported: true
+  coverage: partial
+  mechanism: request-body field
+  key_field: idempotence_key
+  key_location: request body (not a header)
+  key_max_length: 60
+  key_example_format: UUID v4 (published example 4202ba63-5122-4904-b2d8-a3cbf81692de)
+  retention: 24 hours
+  replay_behavior: >-
+    "Within any 24-hour window, the first screen request with a given idempotence key will be
+    processed normally. However, subsequent screen requests (within 24 hours) with the same
+    idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected
+    (HTTP 303) to the original screen's summary."
+  replay_status_code: 303
+  optional: true
+  scope:
+  - handle_v2_screen_fasta_v2_screen_fasta_post
+  - handle_v2_screen_csv_v2_screen_csv_post
+  - Initiate_Screen__Inline__v2_screen_inline_post
+  - handle_v2_screen_fasta_v2_screen_file_post
+  - handle_v2_screen_fasta_v2_screen_post
+  uncovered_writes:
+  - Create_customer_v2_customers_post
+  - Create_or_Update_a_Note_v2_notes_post
+  - Create_Verification_URL_v2_verification_url__post
+  coverage_math:
+    write_operations: 8
+    covered: 5
+    uncovered: 3
+  coverage_reason: >-
+    partial, not full. Every screen-initiation operation accepts idempotence_key, including the two
+    deprecated aliases, and replay is unambiguous (303 to the original screen). But the three
+    non-screen writes — creating a customer (which itself initiates a sanctions and watchlist
+    screen), creating or updating a note, and minting a verification URL — accept no key and have
+    no documented replay protection. Two of the five covered operations are deprecated aliases of
+    /v2/screen_fasta, so the mechanism covers 3 live screen entry points plus 2 legacy ones.
+pagination:
+  style: cursor
+  params: [cursor, limit, page_index]
+  limit_min: 10
+  limit_max: 100
+  limit_default: not documented
+  response_fields_documented: false
+  operations: [List_Screens_v2_screens_get, List_customers_v2_customers_get]
+  note: >-
+    Both list operations take a `cursor` ("A cursor for use in pagination") and a `limit` bounded
+    10..100. List Customers additionally exposes `page_index`, so the two collections do not
+    paginate the same way. The response schema (ReportsResponse) documents an `items` array; the
+    contract does not name the field that carries the NEXT cursor, so a client cannot page from the
+    spec alone.
+filtering:
+  screens: [screen_id, status, name, created_after, regulatory_status, decision_status, verification_status, max_match_count_per_region]
+  customers: [search_str, status_filter]
+  note: Rich server-side filtering on List Screens; only a free-text search and a status filter on List Customers.
+field_expansion:
+  supported: true
+  param: expand
+  type: boolean
+  note: >-
+    A boolean, not a Stripe-style path list — `expand=true` returns "additional screen data" on
+    List Screens. There is no way to select which relations expand.
+metadata:
+  supported: partial
+  fields: [name]
+  note: >-
+    `name` is "a display label that's useful for you to identify this screen. Unused by Aclid"
+    (max 100 chars, example "Order #123456"). It is the only caller-controlled correlation field;
+    there is no free-form metadata object.
+async_execution:
+  supported: true
+  param: asynchronous
+  location: request body
+  note: >-
+    Screen initiation accepts an `asynchronous` flag. Combined with ScreenStatus
+    (pending_upload, queued, running, succeeded, failed, deleted, archived) and the 204 "Screen Not
+    Ready" on the detail and stream reads, the intended agent pattern is submit -> poll status ->
+    read details. There is no callback/webhook alternative.
+large_results:
+  operation: Stream_Screen_v2_screens__id__stream_get
+  mechanism: pre-signed URL to a JSON or CSV file
+  note: The API hands back a URL rather than streaming; 204 means the screen is not ready yet.
+request_tracing:
+  request_id_header: null
+  request_id_field: request_id
+  note: >-
+    No X-Request-Id response header is documented. The AWS API Gateway edge error body does carry
+    `request_id` and `request_time` (observed on a 403, 2026-09-06); that is the only correlation
+    identifier available to a caller, and only on errors.
+versioning:
+  scheme: uri-path
+  current: v2
+  spec_version: 2.2.1
+  note: >-
+    All operations live under /v2/. info.version (2.2.1) tracks the document, not the URI major.
+    No version header, no dated version train, no published version-support policy.
+  see: lifecycle/aclid-lifecycle.yml
+error_envelope:
+  format: none (not RFC 9457)
+  documented_media_type: application/json
+  documented_schema: HTTPValidationError (detail[] of loc/msg/type — the FastAPI default)
+  observed_edge_fields: [auth_detail, detail, path, request_id, request_time, response_type]
+  see: errors/aclid-problem-types.yml
+rate_limit_signaling:
+  documented: false
+  headers: []
+  status_on_exhaustion: null
+  note: >-
+    No X-RateLimit-*, no RateLimit-*, no Retry-After and no 429 anywhere in the contract or the
+    reference. The only published volume constraint is a payload ceiling, not a request rate.
+  see: rate-limits/aclid-rate-limits.yml
+payload_limits:
+  max_total_base_pairs: 1000000000
+  min_sequence_length_fasta: 30 base pairs
+  min_sequence_length_fastq: any non-zero length
+  accepted_uploads: [FASTA, FASTQ, CSV, inline JSON]
+  note: Files that are not valid FASTA or FASTQ are rejected.
+dry_run_mode:
+  supported: true
+  mechanism: test-mode API key
+  note: >-
+    Not an operation-level dry-run flag. Aclid's separation is at the credential: "the API key you
+    use to authenticate the request determines whether the request is live mode or test mode", and
+    test-mode requests do not affect live data. An agent cannot rehearse a single call in live mode.
+  see: sandbox/aclid-sandbox.yml
+reversibility:
+  grade: documented
+  overall: >-
+    The API is GET/POST only — there is no DELETE, PUT or PATCH on any of the 18 operations, and no
+    cancel, void, undo, restore or archive operation is exposed. A screen, once initiated, cannot be
+    withdrawn through the API even though ScreenStatus itself carries `deleted` and `archived`
+    values that only the console can reach. The one genuine reversal path is the note upsert, and
+    Aclid states no window for it.
+  write_surfaces:
+  - operation: handle_v2_screen_fasta_v2_screen_fasta_post
+    action: initiate a sequence screen
+    reversal: none
+    window: null
+    note: >-
+      No cancel or delete operation. Re-sending the same idempotence_key within 24h does not undo
+      the screen; it 303s to the original.
+  - operation: handle_v2_screen_csv_v2_screen_csv_post
+    action: initiate a sequence screen from CSV
+    reversal: none
+    window: null
+  - operation: Initiate_Screen__Inline__v2_screen_inline_post
+    action: initiate a sequence screen from inline JSON
+    reversal: none
+    window: null
+  - operation: Create_customer_v2_customers_post
+    action: create a customer and initiate a sanctions and watchlist screen
+    reversal: none
+    window: null
+    note: No delete-customer operation is published.
+  - operation: Create_or_Update_a_Note_v2_notes_post
+    action: attach or change a note and its decision_status on a screen
+    reversal: Create_or_Update_a_Note_v2_notes_post
+    reversal_kind: upsert
+    window: null
+    confidence: medium
+    note: >-
+      Passing an existing note_id updates that note rather than creating a new one, so a
+      decision_status recorded as approved/rejected/escalated can be changed back to awaiting by
+      the same operation. Aclid publishes no time limit on this and does not describe it as an
+      undo; recorded as `documented`, NOT `verified`, because no window is stated.
+  - operation: Create_Verification_URL_v2_verification_url__post
+    action: mint a hosted or embedded customer verification URL
+    reversal: none
+    window: null
+    note: No revoke or expire operation is published for an issued verification URL.
+  grade_reason: >-
+    documented, not verified — a reversal path exists on exactly one write surface and the provider
+    states no window for it. Never assume a window Aclid has not published.
+cross_links:
+  errors: errors/aclid-problem-types.yml
+  reason_codes: errors/aclid-compliance-reason-codes.yml
+  lifecycle: lifecycle/aclid-lifecycle.yml
+  authentication: authentication/aclid-authentication.yml
+  rate_limits: rate-limits/aclid-rate-limits.yml
+  data_model: data-model/aclid-data-model.yml

@@ -1,0 +1,23 @@
+generated: '2026-09-06'
+method: searched
+source: public package registries + https://api.aclid.bio/docs
+package_count: 0
+official_sdk_count: 0
+packages: []
+note: >-
+  Aclid ships no client libraries. Searched 2026-09-06 and every registry missed: npm registry
+  search for "aclid" returned zero packages; PyPI 404 on aclid, aclid-api, aclid-sdk and
+  aclid-python; RubyGems 404; NuGet 404; crates.io no match; Packagist no match; proxy.golang.org
+  404 for github.com/aclid. The API reference publishes only raw curl and httpx snippets — there is
+  no SDK page, no download link and no CLI. github.com/aclid exists as a GitHub organisation but
+  holds a single public repository, a fork of the unrelated project cyrusagents/cyrus, with no
+  members, no website field and nothing tying it to Aclid, Inc.; it is NOT recorded as Aclid's
+  GitHub organisation.
+registries_checked:
+- {registry: npm, query: aclid, result: no packages, version: null}
+- {registry: pypi, names: [aclid, aclid-api, aclid-sdk, aclid-python], result: 404, version: null}
+- {registry: rubygems, name: aclid, result: 404, version: null}
+- {registry: nuget, name: aclid, result: 404, version: null}
+- {registry: crates.io, name: aclid, result: no match, version: null}
+- {registry: packagist, query: aclid, result: no match, version: null}
+- {registry: proxy.golang.org, module: github.com/aclid, result: 404, version: null}

@@ -1,0 +1,407 @@
+generated: '2026-09-06'
+method: derived
+source: openapi/aclid-openapi.yml
+note: Entity graph derived from components.schemas $ref edges and id-reference fields in the Aclid OpenAPI 3.1.0
+  (v2.2.1). Request-body wrapper schemas (Body_*) are excluded from entities but their $ref edges are not used to
+  invent relationships.
+root_entities:
+- CustomerScreen
+- ReportsResponse
+- ReportMetadata
+- MaterialSummary
+- Finding
+- Note
+- CustomerNote
+- Followup
+id_prefixes: null
+id_prefix_note: Aclid publishes no documented identifier prefix scheme; screen_id and requester_id are opaque strings
+  in the contract.
+entities:
+- name: CustomerNote
+  kind: object
+  fields:
+  - created_at
+  - decision_status
+  - note_content
+  - note_id
+  required:
+  - note_id
+  - created_at
+- name: CustomerScreen
+  kind: object
+  fields:
+  - address
+  - company
+  - created_at
+  - decision_status
+  - kyc_flags_count
+  - kyc_latest
+  - name
+  - requester_id
+  - sanctions_count
+  - status
+  required:
+  - created_at
+  - requester_id
+  - decision_status
+- name: DecisionStatus
+  kind: enum
+  fields: null
+  required: null
+  values:
+  - awaiting
+  - approved
+  - rejected
+  - escalated
+- name: Finding
+  kind: object
+  fields:
+  - material
+  - reason_code
+  - regulatory_status
+  required:
+  - regulatory_status
+- name: Followup
+  kind: object
+  fields:
+  - completed_at
+  - created_at
+  - documentation_url
+  - grant_docs
+  - metadata
+  required:
+  - created_at
+  - grant_docs
+- name: FollowupURLCreateResponse
+  kind: object
+  fields:
+  - url
+  required:
+  - url
+- name: FunSoC
+  kind: object
+  fields:
+  - description
+  - name
+  required:
+  - name
+  - description
+- name: GeneOntology
+  kind: object
+  fields:
+  - definition
+  - name
+  required:
+  - name
+  - definition
+- name: GrantDoc
+  kind: object
+  fields:
+  - description
+  - end_date
+  - grant_id
+  - id
+  - office_agency_name
+  - recipient_address
+  - recipient_name
+  - start_date
+  required:
+  - id
+  - grant_id
+  - start_date
+  - end_date
+- name: HTTPValidationError
+  kind: object
+  fields:
+  - detail
+  required: null
+- name: Match
+  kind: object
+  fields:
+  - bitscore
+  - evalue
+  - findings
+  - function
+  - funsocs
+  - gene
+  - go
+  - housekeeping
+  - length
+  - organism
+  - pathogenesis
+  - pident
+  - qcov
+  - qend
+  - qlen
+  - qstart
+  - query
+  - regulatory_status
+  - scov
+  - send
+  - slen
+  - sseqid
+  - sstart
+  - taxid
+  required:
+  - query
+  - qstart
+  - qend
+  - qlen
+  - sseqid
+  - sstart
+  - send
+  - slen
+  - length
+  - evalue
+  - bitscore
+  - taxid
+  - organism
+  - go
+  - funsocs
+  - pident
+  - qcov
+  - scov
+  - findings
+  - regulatory_status
+  - pathogenesis
+  - housekeeping
+- name: MatchGroup
+  kind: object
+  fields:
+  - findings
+  - matches
+  - regulatory_status
+  required:
+  - matches
+  - findings
+  - regulatory_status
+- name: MaterialSummary
+  kind: object
+  fields:
+  - control_type
+  - coverage
+  - risk_factors
+  - total_sequences
+  - unique_coverage
+  required:
+  - total_sequences
+- name: Note
+  kind: object
+  fields:
+  - created_at
+  - created_by
+  - decision_status
+  - note_content
+  - note_id
+  required:
+  - note_id
+  - created_by
+  - created_at
+- name: RegulatoryStatus
+  kind: enum
+  fields: null
+  required: null
+  values:
+  - controlled
+  - not_controlled
+- name: ReportMetadata
+  kind: object
+  fields:
+  - created
+  - decision_status
+  - findings
+  - id
+  - length
+  - match_count
+  - material_count
+  - material_summary
+  - name
+  - regulatory_status
+  - request_frameworks
+  - sequences
+  - status
+  - updated
+  - user
+  - verification_completed_at
+  - verification_status
+  - verification_url
+  - version
+  required:
+  - id
+  - user
+  - created
+  - status
+  - findings
+  - regulatory_status
+- name: ReportsResponse
+  kind: object
+  fields:
+  - items
+  - next_cursor
+  required:
+  - items
+- name: RiskFactors
+  kind: object
+  fields:
+  - close_match
+  - distant_matches
+  - poorly_characterized
+  - virulence
+  required:
+  - distant_matches
+  - poorly_characterized
+  - close_match
+  - virulence
+- name: SanctionScreenCreateResponse
+  kind: object
+  fields:
+  - requester_id
+  - status
+  required:
+  - requester_id
+  - status
+- name: ScreenInputSequence
+  kind: object
+  fields:
+  - name
+  - sequence
+  required:
+  - name
+  - sequence
+- name: ScreenStatus
+  kind: enum
+  fields: null
+  required: null
+  values:
+  - pending_upload
+  - queued
+  - running
+  - succeeded
+  - failed
+  - deleted
+  - archived
+- name: SequenceType
+  kind: enum
+  fields: null
+  required: null
+  values:
+  - nucleotide
+  - amino_acid
+- name: StreamReportResponse
+  kind: object
+  fields:
+  - url
+  required:
+  - url
+- name: ValidationError
+  kind: object
+  fields:
+  - ctx
+  - input
+  - loc
+  - msg
+  - type
+  required:
+  - loc
+  - msg
+  - type
+- name: VerificationStatus
+  kind: enum
+  fields: null
+  required: null
+  values:
+  - submitted
+  - partially_submitted
+  - missing_verification
+  - not_required
+relationships:
+- from: Followup
+  to: GrantDoc
+  type: has_many
+  via: grant_docs
+- from: HTTPValidationError
+  to: ValidationError
+  type: has_many
+  via: detail
+- from: Match
+  to: Finding
+  type: has_many
+  via: findings
+  shape: keyed map (additionalProperties)
+  keyed_by: compliance framework id (us_ccl_export_control, eu_dual_use_export_control, us_select_agent, us_screening_framework,
+    nih_recombinant_dna_guidelines, eu_directive_2000_54_ec, zkbs_oncogenes, usda_vs)
+  see: errors/aclid-compliance-reason-codes.yml
+- from: Match
+  to: FunSoC
+  type: has_many
+  via: funsocs
+- from: Match
+  to: GeneOntology
+  type: has_many
+  via: go
+- from: MatchGroup
+  to: Finding
+  type: has_many
+  via: findings
+  shape: keyed map (additionalProperties)
+  keyed_by: compliance framework id (us_ccl_export_control, eu_dual_use_export_control, us_select_agent, us_screening_framework,
+    nih_recombinant_dna_guidelines, eu_directive_2000_54_ec, zkbs_oncogenes, usda_vs)
+  see: errors/aclid-compliance-reason-codes.yml
+- from: MatchGroup
+  to: Match
+  type: has_many
+  via: matches
+- from: MaterialSummary
+  to: RiskFactors
+  type: has_one
+  via: risk_factors
+- from: ReportMetadata
+  to: Finding
+  type: has_many
+  via: findings
+  shape: keyed map (additionalProperties)
+  keyed_by: compliance framework id (us_ccl_export_control, eu_dual_use_export_control, us_select_agent, us_screening_framework,
+    nih_recombinant_dna_guidelines, eu_directive_2000_54_ec, zkbs_oncogenes, usda_vs)
+  see: errors/aclid-compliance-reason-codes.yml
+- from: ReportMetadata
+  to: MatchGroup
+  type: has_many
+  via: sequences
+  shape: keyed map (additionalProperties)
+  keyed_by: sequence name supplied by the caller
+  see: null
+- from: ReportMetadata
+  to: MaterialSummary
+  type: has_one
+  via: material_summary
+- from: ReportsResponse
+  to: ReportMetadata
+  type: has_many
+  via: items
+id_reference_fields:
+- schema: Body_Create_Verification_URL_v2_verification_url__post
+  field: screen_id
+- schema: Body_Create_customer_v2_customers_post
+  field: screen_id
+- schema: Body_Create_or_Update_a_Note_v2_notes_post
+  field: screen_id
+- schema: Body_Initiate_Screen__Inline__v2_screen_inline_post
+  field: requester_id
+- schema: Body_handle_v2_screen_csv_v2_screen_csv_post
+  field: requester_id
+- schema: Body_handle_v2_screen_fasta_v2_screen_fasta_post
+  field: requester_id
+- schema: Body_handle_v2_screen_fasta_v2_screen_file_post
+  field: requester_id
+- schema: Body_handle_v2_screen_fasta_v2_screen_post
+  field: requester_id
+- schema: CustomerScreen
+  field: requester_id
+- schema: GrantDoc
+  field: id
+- schema: ReportMetadata
+  field: id
+- schema: SanctionScreenCreateResponse
+  field: requester_id
+entity_count: 25
+relationship_count: 12

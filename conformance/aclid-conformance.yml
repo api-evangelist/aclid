@@ -1,0 +1,153 @@
+generated: '2026-09-06'
+method: derived
+source: openapi/aclid-openapi.yml
+docs: https://api.aclid.bio/docs
+note: >-
+  Cross-cutting standards asserted from the contract and from documents probed on Aclid's own
+  hosts. `conforms: false` here means "no evidence found", not "the provider fails a test".
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: openapi/aclid-openapi.yml declares openapi 3.1.0; served at https://api.aclid.bio/openapi.json (HTTP 200, 2026-09-06)
+- id: rest
+  conforms: true
+  evidence: 'info.description: "The Aclid API is organized around REST... predictable resource-oriented URLs, JSON-encoded responses, standard HTTP response codes"'
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 securityScheme; the API authenticates with a raw API key in the Authorization header.
+- id: oidc
+  conforms: true
+  scope: console identity only, not the API
+  evidence: >-
+    https://cognito-idp.us-east-1.amazonaws.com/us-east-1_PJ68v2vt9/.well-known/openid-configuration
+    (HTTP 200, 2026-09-06) — Aclid's AWS Cognito user pool serving the dash.aclid.bio and
+    verify.aclid.bio apps; issuer, jwks_uri, authorization/token/userinfo/revocation endpoints on
+    the branded domain aclid.auth.us-east-1.amazoncognito.com.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: No application/problem+json anywhere in the contract; failures use the FastAPI HTTPValidationError envelope.
+- id: rfc9116-security-txt
+  conforms: partial
+  evidence: >-
+    /.well-known/security.txt served (HTTP 200, text/plain) on dash.aclid.bio and verify.aclid.bio.
+    Carries two Contact fields and an Expires of 2026-04-07T00:00:00Z, which is in the PAST as of
+    2026-09-06 — RFC 9116 says an expired file must not be relied upon. No Policy, Encryption,
+    Preferred-Languages or Canonical field. Not served on aclid.bio, www.aclid.bio or api.aclid.bio.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: Two operations are marked deprecated in the spec but no Sunset or Deprecation header is documented.
+- id: idempotency
+  conforms: partial
+  evidence: >-
+    idempotence_key body field with a 24-hour window and an HTTP 303 replay redirect, on the five
+    screen-initiation operations only (5 of 8 writes). See conventions/aclid-conventions.yml.
+- id: cursor-pagination
+  conforms: partial
+  evidence: >-
+    `cursor` + `limit` (10..100) on List Screens and List Customers, but the response field carrying
+    the next cursor is not documented in the contract.
+- id: json-api
+  conforms: false
+  evidence: No JSON:API media type or document structure.
+- id: asyncapi
+  conforms: false
+  evidence: No event, webhook or streaming surface — the "stream" operation returns a pre-signed file URL.
+- id: mcp
+  conforms: false
+  evidence: 'No MCP server. POST tools/list to https://api.aclid.bio/mcp returns the API Gateway 403 "Missing Authentication Token" served for every unmatched route; mcp.aclid.bio does not resolve.'
+- id: a2a
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json miss on every Aclid host (404 on aclid.bio, www, api; SPA shell on dash and verify).
+domain_standards:
+- id: us-ccl-export-control
+  name: US Commerce Control List (BIS export control)
+  conforms: true
+  role: screened-against
+  evidence: 'OpenAPI tag "Compliance Reason Codes" declares the framework id `us_ccl_export_control` with four reason codes (toxin, virus, pathogenic, specific); framework ids key the Finding map returned on every screen.'
+  spec_location: components.schemas.ReportMetadata.findings (additionalProperties -> Finding), tag "Compliance Reason Codes"
+- id: eu-dual-use-2021-821
+  name: EU Dual-Use Export Control List (Regulation (EU) 2021/821)
+  conforms: true
+  role: screened-against
+  evidence: framework id `eu_dual_use_export_control`, four reason codes
+- id: us-federal-select-agent-program
+  name: US Federal Select Agent Program
+  conforms: true
+  role: screened-against
+  evidence: framework id `us_select_agent`
+- id: ostp-nucleic-acid-synthesis-screening-framework
+  name: US Framework for Nucleic Acid Synthesis Screening
+  conforms: true
+  role: screened-against
+  evidence: >-
+    framework id `us_screening_framework`; the reason-code text cites the US Department of Health
+    and Human Services "sequence of concern" designation. Aclid also publishes a public guide to the
+    screening certification process at https://www.aclid.bio/resources/guide-to-the-screening-certification-process
+- id: nih-recombinant-dna-guidelines
+  name: NIH Guidelines for Research Involving Recombinant or Synthetic Nucleic Acid Molecules
+  conforms: true
+  role: screened-against
+  evidence: framework id `nih_recombinant_dna_guidelines`, Risk Group 1-4 reason codes
+- id: eu-directive-2000-54-ec
+  name: EU Directive 2000/54/EC (biological agents at work)
+  conforms: true
+  role: screened-against
+  evidence: framework id `eu_directive_2000_54_ec`, Risk Group 1-4 reason codes
+- id: zkbs-oncogene-database
+  name: ZKBS (German Central Committee on Biological Safety) oncogene evaluations
+  conforms: true
+  role: screened-against
+  evidence: framework id `zkbs_oncogenes`, six oncogene reason codes
+- id: usda-aphis-vs
+  name: USDA APHIS Veterinary Services regulated livestock and poultry pathogens
+  conforms: true
+  role: screened-against
+  evidence: framework id `usda_vs`, four reason codes, cites the VS 16-3 form and the VS Permitting Assistant
+- id: orcid
+  name: ORCID researcher identifier
+  conforms: true
+  role: consumed-identifier
+  evidence: >-
+    The Aclid customer verification flow offers "Link ORCID" and states "We partnered with ORCID to
+    help verify your information. Your research ID helps expedite the biosecurity review." An ORCID
+    OAuth client id and https://orcid.org are published in the client configuration of
+    https://verify.aclid.bio (probed 2026-09-06, HTTP 200).
+- id: fasta
+  name: FASTA sequence format
+  conforms: true
+  role: accepted-input
+  evidence: POST /v2/screen_fasta accepts multipart FASTA; invalid FASTA is rejected.
+- id: fastq
+  name: FASTQ sequence format
+  conforms: true
+  role: accepted-input
+  evidence: POST /v2/screen_fasta also accepts FASTQ.
+- id: gene-ontology
+  name: Gene Ontology
+  conforms: true
+  role: returned-vocabulary
+  evidence: components.schemas.GeneOntology, referenced from Match.go
+- id: funsoc
+  name: FunSoC (Functions of Sequences of Concern)
+  conforms: true
+  role: returned-vocabulary
+  evidence: components.schemas.FunSoC, referenced from Match.funsocs
+domain_standard_summary:
+  count: 14
+  note: >-
+    Aclid's contract declares the regulatory frameworks it screens against as first-class,
+    machine-readable ids that key the findings map on every screen result — a buyer who already
+    speaks US CCL, EU dual-use, Select Agent or the NIH Guidelines can read an Aclid result without
+    a bespoke connector. That is the domain-standard signature for this market. It also consumes
+    ORCID as a researcher identity and FASTA/FASTQ as input formats, and returns Gene Ontology and
+    FunSoC annotations.
+compliance_program:
+  published: false
+  certifications: []
+  trust_center: null
+  note: >-
+    Aclid publishes no SOC 2, ISO 27001, HIPAA, PCI or FedRAMP claim and no trust centre. Probed
+    2026-09-06: https://www.aclid.bio/trust -> 404, /security -> 404, /compliance -> 404;
+    probe-security-programs.py found no trust surface. NOTE the distinction that matters here:
+    Aclid screens its customers against regulatory frameworks; it makes no published claim about
+    its OWN security certifications. No `Compliance` pointer is emitted for that reason.

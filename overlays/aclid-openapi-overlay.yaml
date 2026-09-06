@@ -1,0 +1,56 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Aclid API
+  version: 1.0.0
+extends: openapi/aclid-openapi.yml
+x-generated: '2026-09-06'
+x-method: generated
+x-source: >-
+  Enhancements API Evangelist derived from Aclid's own published material (the OpenAPI's
+  Authentication tag prose and live probes of api.aclid.bio). The harvested document at
+  openapi/_original/aclid-openapi-original.json is never mutated; this overlay records every
+  difference between it and openapi/aclid-openapi.yml plus the enhancements we would propose.
+actions:
+- target: $
+  description: >-
+    The published document declares no servers[]. The host is stated in the Authentication tag's own
+    curl example (https://api.aclid.bio/v2/screens) and confirmed live, so it is added here.
+  update:
+    servers:
+    - url: https://api.aclid.bio
+      description: Aclid production API host
+- target: $.info
+  description: Rating and provenance annotations.
+  update:
+    x-apievangelist-profile: https://apis.io/provider/aclid
+    x-apievangelist-harvested-from: https://api.aclid.bio/openapi.json
+    x-apievangelist-harvested-on: '2026-09-06'
+- target: $.components
+  description: >-
+    PROPOSED, not asserted. The published contract declares no securitySchemes and no security[]
+    requirement, yet every operation returns 403 without an Authorization header. This action shows
+    Aclid the two-line fix; it is deliberately not applied to the harvested original.
+  update:
+    securitySchemes:
+      AclidApiKey:
+        type: apiKey
+        in: header
+        name: Authorization
+        description: >-
+          Your Aclid API key, sent as the raw Authorization header value with no Bearer prefix. Get
+          it from your profile in the Aclid Dashboard (https://dash.aclid.bio). The key selects live
+          or test mode.
+- target: $.paths['/v2/screen'].post
+  description: Deprecated in favour of /v2/screen_fasta; no sunset date is published.
+  update:
+    x-apievangelist-deprecation:
+      replacement_operation: handle_v2_screen_fasta_v2_screen_fasta_post
+      sunset_date: null
+      sunset_header_supported: false
+- target: $.paths['/v2/screen_file'].post
+  description: Deprecated in favour of /v2/screen_fasta; no sunset date is published.
+  update:
+    x-apievangelist-deprecation:
+      replacement_operation: handle_v2_screen_fasta_v2_screen_fasta_post
+      sunset_date: null
+      sunset_header_supported: false

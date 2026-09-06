@@ -1,0 +1,68 @@
+generated: '2026-09-06'
+method: searched
+source: https://api.aclid.bio/docs
+versioning:
+  scheme: uri-path
+  current: v2
+  document_version: 2.2.1
+  docs: https://api.aclid.bio/docs
+  policy_url: null
+  note: >-
+    Every operation is under /v2/. info.version on the OpenAPI (2.2.1) versions the DOCUMENT and is
+    the only place a consumer can see the contract move; Aclid publishes no changelog, no release
+    notes and no version-support window, so there is no way to learn what changed between 2.2.0 and
+    2.2.1 or how long v2 will be served.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  in_spec: true
+  mechanism: "OpenAPI `deprecated: true` plus a prose pointer to the replacement operation"
+  note: >-
+    Aclid marks deprecated operations in the machine-readable contract and names the successor in
+    the description — better than most providers this size. What is missing is the policy half:
+    no removal date, no Sunset/Deprecation response headers (RFC 8594), and no published notice
+    period.
+deprecated_operations:
+- operation: handle_v2_screen_fasta_v2_screen_file_post
+  path: POST /v2/screen_file
+  replacement: POST /v2/screen_fasta
+  replacement_operation: handle_v2_screen_fasta_v2_screen_fasta_post
+  sunset_date: null
+  source: openapi/aclid-openapi.yml
+- operation: handle_v2_screen_fasta_v2_screen_post
+  path: POST /v2/screen
+  replacement: POST /v2/screen_fasta
+  replacement_operation: handle_v2_screen_fasta_v2_screen_fasta_post
+  sunset_date: null
+  source: openapi/aclid-openapi.yml
+status_page: https://status.aclid.bio
+status_page_details:
+  provider: Atlassian Statuspage
+  page_id: xdf6j0fstt49
+  alternate_url: https://aclid.statuspage.io
+  api: https://status.aclid.bio/api/v2/summary.json
+  probed: '2026-09-06'
+  http_status: 200
+  components:
+  - {name: Aclid Dashboard, host: dash.aclid.bio}
+  - {name: Aclid API, host: api.aclid.bio}
+  - {name: Aclid Compliance Verification, host: verify.aclid.bio}
+  - {name: Aclid Marketing Site, host: www.aclid.bio}
+  note: >-
+    A real, per-component status page with a machine-readable Statuspage v2 API — the strongest
+    operational-transparency artifact Aclid publishes. It is also where the verify.aclid.bio host
+    was discovered.
+sla:
+  url: null
+  uptime_target: null
+  note: No SLA or uptime commitment is published on the public site or in the API reference.
+changelog:
+  url: null
+  note: >-
+    No changelog, release notes or "what's new" page exists on www.aclid.bio, api.aclid.bio or
+    dash.aclid.bio. Probed 2026-09-06: https://www.aclid.bio/changelog -> 404.
+gaps:
+- No deprecation policy page and no Sunset/Deprecation headers, so the two deprecated operations carry no removal date.
+- No changelog, so the document version bump is unexplained.
+- No SLA.

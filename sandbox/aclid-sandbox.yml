@@ -1,0 +1,38 @@
+generated: '2026-09-06'
+method: searched
+source: https://api.aclid.bio/docs
+note: >-
+  Aclid publishes a test/live separation but no test data. Recorded because the separation itself is
+  the contract an integrator relies on; nothing here is invented, and no test value is fabricated
+  because Aclid publishes none.
+test_live_separation:
+  supported: true
+  selector: the API key
+  detail: >-
+    "You can use the Aclid API in test mode, which doesn't affect your live data. The API key you
+    use to authenticate the request determines whether the request is live mode or test mode."
+  key_prefix_convention: null
+  key_prefix_note: >-
+    Aclid publishes no prefix scheme (no lp_/sk_test_ analogue), so a key cannot be identified as
+    test or live by inspection — a real operational risk for an agent holding more than one key.
+  separate_dashboard_toggle: not documented
+test_values:
+  published: false
+  note: >-
+    No test sequences, no magic identifiers, no fixture screens and no simulated findings are
+    published. The API reference does carry one real worked example sequence — a cholera toxin A2
+    fragment from Vibrio cholerae, used to illustrate the CSV and inline request bodies — but Aclid
+    presents it as documentation, not as a sandbox fixture, and it is recorded here as such.
+  example_sequence:
+    name: cholera toxin A2 [Vibrio cholerae]
+    used_in: [POST /v2/screen_csv, POST /v2/screen_inline]
+    purpose: request-body format illustration
+test_clock: false
+fixture_tooling: false
+console:
+  url: https://dash.aclid.bio
+  note: The Aclid Dashboard issues API keys from the user profile; it is a customer console, not a public playground.
+gaps:
+- No published test key, test sequence set or expected-findings fixture, so an integrator cannot assert against a known result.
+- No key prefix, so test and live keys are indistinguishable.
+- No public sandbox account — access requires a sales conversation.

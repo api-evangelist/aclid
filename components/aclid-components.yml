@@ -1,0 +1,48 @@
+generated: '2026-09-06'
+method: searched
+source: 'https://api.aclid.bio/docs#operation/Create_Verification_URL_v2_verification_url__post'
+note: >-
+  Aclid ships a client-side embeddable verification widget. It is documented inside the
+  Create Verification URL operation description rather than on a components page, which is why it is
+  easy to miss. Distinct from an SDK: there is no server-side client library (see
+  packages/aclid-packages.yml).
+families:
+- name: Customer Verification
+  description: >-
+    A drop-in module that collects and verifies a customer's compliance information inside the
+    integrator's own page, so the buyer is never redirected away during checkout or order intake.
+  components:
+  - name: Embedded verification
+    type: javascript-widget
+    loader: https://verify.aclid.bio/widget.js
+    loader_probed: '2026-09-06'
+    loader_http_status: 200
+    loader_content_type: application/javascript; charset=utf-8
+    global: Aclid
+    init: 'Aclid.showEmbeddedVerification({ verificationUrl: string, onSuccess: function })'
+    requires:
+    - A verification URL minted by POST /v2/verification_url/ (Create_Verification_URL_v2_verification_url__post)
+    - 'Allow-listing: "Confirm with the Aclid team that your website is in our allow lists." — the widget is not self-serve.'
+    backing_operation: Create_Verification_URL_v2_verification_url__post
+  - name: Hosted verification flow
+    type: hosted-page
+    host: https://verify.aclid.bio
+    description: >-
+      Aclid-hosted alternative to the embedded widget for teams that do not want to build. Branding
+      and theming are customisable; an optional redirect_url returns the customer to the
+      integrator's site afterwards.
+    backing_operation: Create_Verification_URL_v2_verification_url__post
+    parameters: [redirect_url]
+  - name: ORCID linking
+    type: identity-linking
+    description: >-
+      Inside the verification flow, a researcher can link an ORCID iD to expedite review. Published
+      copy: "We partnered with ORCID to help verify your information. Your research ID helps
+      expedite the biosecurity review."
+    evidence: ORCID client id and https://orcid.org in the verify.aclid.bio client configuration, probed 2026-09-06
+loader_libraries:
+- https://verify.aclid.bio/widget.js
+gaps:
+- No published version or integrity hash for widget.js; the script tag is unpinned, so a consumer cannot tell which build they load.
+- No npm/CDN distribution of the widget; it is served only from verify.aclid.bio.
+- Allow-listing is a manual step through the Aclid team, so the embedded component cannot be adopted self-serve.

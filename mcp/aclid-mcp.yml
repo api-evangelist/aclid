@@ -1,0 +1,147 @@
+generated: '2026-09-06'
+method: derived
+status: candidate
+source: openapi/aclid-openapi.yml
+note: Aclid ships NO MCP server. This is a candidate tool list derived one-to-one from the 18 operations in Aclid's
+  published OpenAPI, so an agent builder can see what an Aclid MCP server would expose. It is not a server, it is
+  not hosted anywhere, and no endpoint URL is asserted.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  auth_note: If a server existed it would carry the API key the REST API uses (raw value in the Authorization header).
+  verified: derived
+  probe_evidence:
+  - url: https://api.aclid.bio/mcp
+    method: POST tools/list
+    status: 403
+    result: AWS API Gateway "Missing Authentication Token" — the response served for every unmatched route on this
+      host, not an MCP server behind auth.
+  - url: https://api.aclid.bio/v2/mcp
+    method: POST tools/list
+    status: 403
+    result: Same 403 as /v2/zzznotarealroute7f3a — /v2/* is a catch-all authorizer, so this is not evidence of a
+      route.
+  - url: https://mcp.aclid.bio/
+    method: GET
+    status: 0
+    result: DNS does not resolve.
+server: null
+tool_count: 18
+tools:
+- name: initiate_screen_fasta
+  description: Initiate Screen (FASTA File Upload)
+  method: POST
+  path: /v2/screen_fasta
+  source_operation: openapi/aclid-openapi.yml#handle_v2_screen_fasta_v2_screen_fasta_post
+  read_only: false
+- name: initiate_screen_csv
+  description: Initiate Screen (CSV File Upload)
+  method: POST
+  path: /v2/screen_csv
+  source_operation: openapi/aclid-openapi.yml#handle_v2_screen_csv_v2_screen_csv_post
+  read_only: false
+- name: initiate_screen_file_deprecated
+  description: Initiate Screen (FASTA File Upload)
+  method: POST
+  path: /v2/screen_file
+  source_operation: openapi/aclid-openapi.yml#handle_v2_screen_fasta_v2_screen_file_post
+  read_only: false
+  deprecated: true
+- name: initiate_screen_deprecated
+  description: Initiate Screen (FASTA File Upload)
+  method: POST
+  path: /v2/screen
+  source_operation: openapi/aclid-openapi.yml#handle_v2_screen_fasta_v2_screen_post
+  read_only: false
+  deprecated: true
+- name: initiate_screen_inline
+  description: Initiate Screen (Inline)
+  method: POST
+  path: /v2/screen_inline
+  source_operation: openapi/aclid-openapi.yml#Initiate_Screen__Inline__v2_screen_inline_post
+  read_only: false
+- name: list_screens
+  description: List Screens
+  method: GET
+  path: /v2/screens
+  source_operation: openapi/aclid-openapi.yml#List_Screens_v2_screens_get
+  read_only: true
+- name: list_screen_names
+  description: List Screen Names
+  method: GET
+  path: /v2/screens/names
+  source_operation: openapi/aclid-openapi.yml#List_Screen_Names_v2_screens_names_get
+  read_only: true
+- name: stream_screen
+  description: Stream Screen
+  method: GET
+  path: /v2/screens/{id}/stream
+  source_operation: openapi/aclid-openapi.yml#Stream_Screen_v2_screens__id__stream_get
+  read_only: true
+- name: retrieve_screen_summary
+  description: Retrieve Screen Summary
+  method: GET
+  path: /v2/screens/{id}
+  source_operation: openapi/aclid-openapi.yml#Retrieve_Screen_Summary_v2_screens__id__get
+  read_only: true
+- name: retrieve_screen_details
+  description: Retrieve Screen Details
+  method: GET
+  path: /v2/screens/{id}/details
+  source_operation: openapi/aclid-openapi.yml#Retrieve_Screen_Details_v2_screens__id__details_get
+  read_only: true
+- name: retrieve_verification
+  description: Retrieve Verification
+  method: GET
+  path: /v2/verifications/{screen_id}
+  source_operation: openapi/aclid-openapi.yml#Retrieve_Verification_v2_verifications__screen_id__get
+  read_only: true
+- name: create_or_update_note
+  description: Create Or Update A Note
+  method: POST
+  path: /v2/notes
+  source_operation: openapi/aclid-openapi.yml#Create_or_Update_a_Note_v2_notes_post
+  read_only: false
+- name: list_screen_notes
+  description: List Screen Notes
+  method: GET
+  path: /v2/screens/{screen_id}/notes
+  source_operation: openapi/aclid-openapi.yml#List_Screen_Notes_v2_screens__screen_id__notes_get
+  read_only: true
+- name: create_verification_url
+  description: Create Verification Url
+  method: POST
+  path: /v2/verification_url/
+  source_operation: openapi/aclid-openapi.yml#Create_Verification_URL_v2_verification_url__post
+  read_only: false
+- name: list_customers
+  description: List Customers
+  method: GET
+  path: /v2/customers
+  source_operation: openapi/aclid-openapi.yml#List_customers_v2_customers_get
+  read_only: true
+- name: create_customer
+  description: Create Customer
+  method: POST
+  path: /v2/customers
+  source_operation: openapi/aclid-openapi.yml#Create_customer_v2_customers_post
+  read_only: false
+- name: retrieve_customer
+  description: Retrieve Customer
+  method: GET
+  path: /v2/customers/{requester_id}
+  source_operation: openapi/aclid-openapi.yml#Retrieve_customer_v2_customers__requester_id__get
+  read_only: true
+- name: list_customer_notes
+  description: List Customer Notes
+  method: GET
+  path: /v2/customers/{requester_id}/notes
+  source_operation: openapi/aclid-openapi.yml#List_Customer_Notes_v2_customers__requester_id__notes_get
+  read_only: true
+apis_yml_pointer: false
+apis_yml_pointer_reason: 'No common[].type: MCPServer pointer is emitted for this repo. Aclid ships no MCP server;
+  the pointer would assert an agent surface the provider does not serve. This file is a candidate tool list for
+  an implementer, not a claim about Aclid. Wire the pointer only if Aclid publishes a real endpoint or stdio package.'

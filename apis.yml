@@ -1,23 +1,157 @@
 aid: aclid
 name: Aclid
-description: 'Aclid is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: Aclid is a biosecurity and biosafety compliance automation platform for the synthetic biology supply
+  chain. Gene synthesis providers, biofoundries and research institutions use Aclid to screen DNA/RNA orders for
+  pathogenic, toxic and export-controlled sequence elements, to verify the customers placing those orders against
+  international sanctions and watchlists, and to run and document the compliance review that regulators and the
+  OSTP Framework for Nucleic Acid Synthesis Screening expect. The platform is delivered as a hosted dashboard plus
+  a public REST API (api.aclid.bio) that initiates screens from FASTA, FASTQ, CSV or inline sequence payloads, returns
+  structured findings with per-framework regulatory reason codes (US Commerce Control List, EU Dual-Use, Australia
+  Group and others), manages customers and verifications, and issues hosted or embeddable customer-verification
+  flows. Founded 2021 in New York by Kevin Flyangolts with scientific founder Harris H. Wang of Columbia University.
+image: https://cdn.prod.website-files.com/671c02ec6144c945bfc5aa9c/6727db79308f1e1139096dd3_Logo.svg
 url: https://raw.githubusercontent.com/api-evangelist/aclid/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-09-06'
 modified: '2026-09-06'
 tags:
-- Company
-apis: []
+- Biosecurity
+- Biosafety
+- Compliance
+- Synthetic Biology
+- Life Sciences
+- DNA Sequence Screening
+- Sanctions Screening
+- Export Control
+- Biotechnology
+- Risk Assessment
+- Know Your Customer
+tags_raw:
+- biosecurity
+- biosafety
+- compliance
+- synthetic-biology
+- life-sciences
+- dna-sequence-screening
+- sanctions-screening
+- export-control
+- biotechnology
+- risk-assessment
+- know-your-customer
+apis:
+- name: Aclid API
+  description: REST API for biosecurity screening and compliance automation. Initiate a pathogen/toxin sequence
+    screen from a FASTA or FASTQ upload, a CSV of named sequences, or an inline JSON payload; poll or retrieve the
+    screen summary, the full findings detail, or a pre-signed stream URL for large result sets; create and retrieve
+    customers (which also initiates a sanctions and watchlist screen); attach notes to screens and customers; and
+    mint a hosted or embeddable customer verification URL. Authentication is an API key passed verbatim in the HTTP
+    Authorization header, and the key itself selects live or test mode.
+  image: https://cdn.prod.website-files.com/671c02ec6144c945bfc5aa9c/6727db79308f1e1139096dd3_Logo.svg
+  humanURL: https://api.aclid.bio/docs
+  baseURL: https://api.aclid.bio
+  tags:
+  - Biosecurity
+  - Biosafety
+  - Compliance
+  - Synthetic Biology
+  - DNA Sequence Screening
+  - Sanctions Screening
+  - Export Control
+  tags_raw:
+  - biosecurity
+  - biosafety
+  - compliance
+  - synthetic-biology
+  - dna-sequence-screening
+  - sanctions-screening
+  - export-control
+  properties:
+  - type: OpenAPI
+    url: openapi/aclid-openapi.yml
+  - type: Documentation
+    url: https://api.aclid.bio/docs
+  - type: APIReference
+    url: https://api.aclid.bio/docs
+  - type: Authentication
+    url: authentication/aclid-authentication.yml
+  - type: Conventions
+    url: conventions/aclid-conventions.yml
+  - type: Idempotency
+    url: conventions/aclid-conventions.yml
+  - type: ErrorCatalog
+    url: errors/aclid-problem-types.yml
+  - type: DataModel
+    url: data-model/aclid-data-model.yml
+  - type: Overlay
+    url: overlays/aclid-openapi-overlay.yaml
+common:
+- type: DomainSecurity
+  url: security/aclid-domain-security.yml
+- type: Website
+  url: https://www.aclid.bio/
+- type: Documentation
+  url: https://api.aclid.bio/docs
+- type: APIReference
+  url: https://api.aclid.bio/docs
+- type: Login
+  url: https://dash.aclid.bio
+- type: Support
+  url: https://www.aclid.bio/contact
+- type: TermsOfService
+  url: https://www.aclid.bio/terms-of-service
+- type: PrivacyPolicy
+  url: https://www.aclid.bio/privacy-policy
+- type: StatusPage
+  url: https://status.aclid.bio
+- type: Authentication
+  url: authentication/aclid-authentication.yml
+- type: Conventions
+  url: conventions/aclid-conventions.yml
+- type: Idempotency
+  url: conventions/aclid-conventions.yml
+- type: ErrorCatalog
+  url: errors/aclid-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/aclid-lifecycle.yml
+- type: Conformance
+  url: conformance/aclid-conformance.yml
+- type: DataModel
+  url: data-model/aclid-data-model.yml
+- type: Components
+  url: components/aclid-components.yml
+- type: Packages
+  url: packages/aclid-packages.yml
+- type: Plans
+  url: plans/aclid-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/aclid-rate-limits.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/aclid-llms.txt
+- type: Overlay
+  url: overlays/aclid-openapi-overlay.yaml
+- type: WellKnown
+  url: well-known/aclid-well-known.yml
+- type: SecurityTxt
+  url: well-known/aclid-security.txt
+- type: VulnerabilityDisclosure
+  url: security/aclid-vulnerability-disclosure.yml
+- type: Security
+  url: https://dash.aclid.bio/.well-known/security.txt
+- type: Sandbox
+  url: sandbox/aclid-sandbox.yml
+- type: DeclineCodes
+  url: errors/aclid-compliance-reason-codes.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
-common:
-- type: Website
-  url: https://www.nasdaqprivatemarket.com/
+x-enrichment:
+  date: '2026-09-06'
+  status: enriched
+  artifacts_added: 25
+  pass: local-v3

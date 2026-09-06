@@ -1,0 +1,141 @@
+generated: '2026-09-06'
+method: probed
+source: live GET of the named /.well-known/ path list on every host this record knows
+note: >-
+  Five hosts probed: the registrable domain and www (Webflow marketing site), the API host
+  api.aclid.bio (AWS API Gateway), and the two application hosts dash.aclid.bio and
+  verify.aclid.bio named by the Aclid status page components. dash.aclid.bio and
+  verify.aclid.bio are single-page-app catch-alls that answer HTTP 200 with a 1074-byte HTML
+  shell for every unmatched path, INCLUDING the negative control — so on those two hosts only a
+  response that is not that shell is treated as a document. /.well-known/security.txt is exactly
+  that: 99 bytes of text/plain RFC 9116 content, served identically on both. Everything else on
+  those hosts is the shell and is recorded as a miss.
+hosts:
+- host: https://www.aclid.bio
+  path_echo_control: passed
+  hit_count: 0
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/apis.json, status: 404}
+  - {path: /apis.json, status: 404}
+  - {path: /apis.yml, status: 404}
+  - {path: /.well-known/aauth-resource.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /.well-known/aclid-negative-control-7f3ab91c.json, status: 404}
+- host: https://aclid.bio
+  path_echo_control: passed
+  hit_count: 0
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/apis.json, status: 404}
+  - {path: /apis.json, status: 404}
+  - {path: /apis.yml, status: 404}
+  - {path: /.well-known/aauth-resource.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /.well-known/aclid-negative-control-7f3ab91c.json, status: 404}
+- host: https://api.aclid.bio
+  path_echo_control: passed
+  hit_count: 0
+  note: AWS API Gateway; returns {"detail":"Not Found"} JSON on every unmatched path.
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/apis.json, status: 404}
+  - {path: /apis.json, status: 404}
+  - {path: /apis.yml, status: 404}
+  - {path: /.well-known/aauth-resource.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /.well-known/aclid-negative-control-7f3ab91c.json, status: 404}
+- host: https://dash.aclid.bio
+  path_echo_control: failed
+  soft_404_control:
+    path: /.well-known/aclid-negative-control-7f3ab91c.json
+    status: 200
+    bytes: 1074
+    content_type: text/html
+    verdict: >-
+      SPA catch-all. Every unmatched path returns the same 1074-byte HTML shell, so a 200 alone
+      proves nothing on this host. Only responses that differ from the shell are counted.
+  hit_count: 1
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: aclid-security.txt
+    content_type: text/plain; charset=utf-8
+    bytes: 99
+    note: Not the SPA shell — genuine RFC 9116 document.
+  - {path: /.well-known/openid-configuration, status: 200, result: spa-shell, counted: false}
+  - {path: /.well-known/oauth-authorization-server, status: 200, result: spa-shell, counted: false}
+  - {path: /.well-known/oauth-protected-resource, status: 200, result: spa-shell, counted: false}
+  - {path: /.well-known/api-catalog, status: 200, result: spa-shell, counted: false}
+  - {path: /.well-known/ai-plugin.json, status: 200, result: spa-shell, counted: false}
+  - {path: /.well-known/apis.json, status: 200, result: spa-shell, counted: false}
+  - {path: /apis.json, status: 200, result: spa-shell, counted: false}
+  - {path: /apis.yml, status: 200, result: spa-shell, counted: false}
+  - {path: /.well-known/aauth-resource.json, status: 200, result: spa-shell, counted: false}
+  - {path: /.well-known/agent-card.json, status: 200, result: spa-shell, counted: false}
+  - {path: /.well-known/agent.json, status: 200, result: spa-shell, counted: false}
+- host: https://verify.aclid.bio
+  path_echo_control: failed
+  soft_404_control:
+    path: /.well-known/aclid-nc-7f3ab91c.json
+    status: 200
+    bytes: 1074
+    content_type: text/html
+    verdict: SPA catch-all, same shell as dash.aclid.bio.
+  hit_count: 1
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: aclid-security.txt
+    content_type: text/plain; charset=utf-8
+    bytes: 99
+    note: Byte-identical to the dash.aclid.bio copy; saved once.
+  - {path: /.well-known/agent-card.json, status: 200, result: spa-shell, counted: false}
+  - {path: /.well-known/agent.json, status: 200, result: spa-shell, counted: false}
+  - {path: /.well-known/oauth-protected-resource, status: 200, result: spa-shell, counted: false}
+  - {path: /openapi.json, status: 200, result: spa-shell, counted: false}
+- host: https://cognito-idp.us-east-1.amazonaws.com
+  path_echo_control: passed
+  hit_count: 1
+  note: >-
+    NOT an Aclid-controlled host. This is AWS Cognito serving the OIDC discovery document for
+    Aclid's own user pool us-east-1_PJ68v2vt9, whose id and region are published in the client
+    configuration of dash.aclid.bio and verify.aclid.bio. It describes Aclid's console identity
+    provider (branded domain aclid.auth.us-east-1.amazoncognito.com) and is recorded here as
+    evidence for authentication/ and conformance/, not as a document Aclid serves itself.
+  documents:
+  - path: /us-east-1_PJ68v2vt9/.well-known/openid-configuration
+    status: 200
+    file: aclid-openid-configuration.json
+    content_type: application/json
+  - {path: /us-east-1_PJ68v2vt9/.well-known/jwks.json, status: 200}
+summary:
+  hosts_probed: 6
+  documents_found: 2
+  security_txt: true
+  security_txt_expired: true
+  security_txt_expires: '2026-04-07T00:00:00Z'
+  openid_configuration: true
+  api_catalog: false
+  apis_json: false
+  aauth_resource: false
+  agent_card: false
+  ai_plugin: false

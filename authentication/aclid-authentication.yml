@@ -1,0 +1,74 @@
+generated: '2026-09-06'
+method: searched
+source: https://api.aclid.bio/docs
+docs: https://api.aclid.bio/docs#tag/Authentication
+note: >-
+  DERIVED FROM THE DOCS, NOT FROM securitySchemes. The Aclid OpenAPI 3.1.0 declares NO
+  components.securitySchemes and no top-level or per-operation security[] requirement, so
+  derive-authentication.py found nothing to aggregate. The auth contract is published as prose in
+  the spec's own "Authentication" tag description (rendered at the ReDoc reference above) and is
+  captured here verbatim in structure. This is a real contract gap on Aclid's side: a generated
+  client or an agent reading only the machine-readable half would send unauthenticated requests
+  and get HTTP 403.
+summary:
+  types: [apiKey]
+  api_key_in: [header]
+  oauth2_flows: []
+  spec_declares_security: false
+schemes:
+- name: AclidApiKey
+  type: apiKey
+  in: header
+  parameter_name: Authorization
+  scheme_prefix: none
+  prefix_note: >-
+    The key is sent as the RAW value of the Authorization header with no "Bearer " prefix — both
+    published examples do this. The published example value is a JWT-shaped string
+    (eyJhbGciOiJSUzI1NiIsImtpZCI6...), consistent with the AWS Cognito user pool that backs the
+    Aclid console.
+  transport: https-only
+  transport_note: All API requests must be made over HTTPS; plain HTTP calls fail.
+  key_issuance: Self-service from the user profile in the Aclid Dashboard (https://dash.aclid.bio).
+  documented_in: openapi tag description (not components.securitySchemes)
+  sources: [openapi/aclid-openapi.yml]
+modes:
+  live_test_separation: true
+  selector: the API key itself
+  detail: >-
+    "You can use the Aclid API in test mode, which doesn't affect your live data. The API key you
+    use to authenticate the request determines whether the request is live mode or test mode."
+    Aclid publishes no key prefix convention, so a caller cannot tell live from test by inspecting
+    the key.
+console_identity:
+  note: >-
+    Separate from API-key auth. The Aclid console (dash.aclid.bio) and the customer verification
+    flow (verify.aclid.bio) authenticate END USERS through an AWS Cognito user pool operated by
+    Aclid, whose region and pool id are published in the client configuration of both apps.
+  provider: AWS Cognito
+  region: us-east-1
+  user_pool_id: us-east-1_PJ68v2vt9
+  branded_domain: https://aclid.auth.us-east-1.amazoncognito.com
+  issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_PJ68v2vt9
+  discovery: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_PJ68v2vt9/.well-known/openid-configuration
+  jwks_uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_PJ68v2vt9/.well-known/jwks.json
+  oidc_scopes_supported: [openid, email, phone, profile]
+  response_types_supported: [code, token]
+  id_token_signing_alg: RS256
+  federated_identity:
+    orcid: >-
+      The customer verification flow offers "Link ORCID" and states "We partnered with ORCID to
+      help verify your information. Your research ID helps expedite the biosecurity review."
+      An ORCID client id and https://orcid.org are present in the verify.aclid.bio app config.
+  file: well-known/aclid-openid-configuration.json
+  probed: '2026-09-06'
+  http_status: 200
+observed:
+- request: GET https://api.aclid.bio/v2/screens (no Authorization header)
+  status: 403
+  body_fields: [auth_detail, detail, path, request_id, request_time, response_type]
+  probed: '2026-09-06'
+gaps:
+- No components.securitySchemes in the published OpenAPI.
+- No security[] requirement on any of the 18 operations.
+- No documented key prefix, so live vs test mode is not inspectable by the caller.
+- No documented key rotation, expiry or revocation procedure.

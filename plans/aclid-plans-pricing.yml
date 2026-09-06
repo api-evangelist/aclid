@@ -1,0 +1,18 @@
+generated: '2026-09-06'
+method: searched
+source: https://www.aclid.bio/
+plan_count: 0
+plans: []
+pricing_url: null
+note: >-
+  Aclid publishes no pricing. There is no /pricing page (probed 2026-09-06:
+  https://www.aclid.bio/pricing -> 404), no plan or tier named anywhere on the marketing site, and
+  no pricing or billing section in the API reference. Every conversion path on www.aclid.bio leads
+  to https://www.aclid.bio/contact — a "Get in touch" sales form. The API reference does say API
+  keys "are used for billing and authentication", so metered billing exists behind the sales gate;
+  none of its units, rates or included volumes are public.
+access_model: sales-gated
+evidence:
+- {url: 'https://www.aclid.bio/pricing', status: 404}
+- {url: 'https://www.aclid.bio/contact', status: 200}
+- {url: 'https://api.aclid.bio/docs', status: 200}

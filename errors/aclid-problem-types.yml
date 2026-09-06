@@ -1,0 +1,101 @@
+generated: '2026-09-06'
+method: derived
+source: openapi/aclid-openapi.yml (harvested verbatim from https://api.aclid.bio/openapi.json)
+format: none
+format_note: 'Aclid does not use RFC 9457 application/problem+json. Documented failure bodies are application/json
+  HTTPValidationError objects (a `detail` array of ValidationError items with loc/msg/type — the FastAPI default
+  envelope). Undocumented-in-spec but observed live: the AWS API Gateway edge returns {"auth_detail","detail","path","request_id","request_time","response_type"}
+  JSON on 403 for an unauthenticated or unmatched request, and a plain {"detail":"Not Found"} on 404.'
+envelope:
+  documented:
+    media_type: application/json
+    schema: '#/components/schemas/HTTPValidationError'
+    fields:
+    - detail[].loc
+    - detail[].msg
+    - detail[].type
+  observed_edge:
+    media_type: application/json
+    fields:
+    - auth_detail
+    - detail
+    - path
+    - request_id
+    - request_time
+    - response_type
+    evidence: GET https://api.aclid.bio/v2/screens -> 403, probed 2026-09-06
+    note: request_id is the correlation identifier an agent should quote to support.
+problems:
+- status: 303
+  title: Request was previously cached using the same idempotence key
+  schema: null
+  media: null
+  source_operations:
+  - openapi/aclid-openapi.yml#handle_v2_screen_fasta_v2_screen_fasta_post
+  - openapi/aclid-openapi.yml#handle_v2_screen_csv_v2_screen_csv_post
+  - openapi/aclid-openapi.yml#handle_v2_screen_fasta_v2_screen_file_post
+  - openapi/aclid-openapi.yml#handle_v2_screen_fasta_v2_screen_post
+  - openapi/aclid-openapi.yml#Initiate_Screen__Inline__v2_screen_inline_post
+- status: 404
+  title: Customer not found
+  schema: null
+  media: null
+  source_operations:
+  - openapi/aclid-openapi.yml#Retrieve_customer_v2_customers__requester_id__get
+  - openapi/aclid-openapi.yml#List_Customer_Notes_v2_customers__requester_id__notes_get
+- status: 404
+  title: Note Not Found
+  schema: null
+  media: null
+  source_operations:
+  - openapi/aclid-openapi.yml#List_Screen_Notes_v2_screens__screen_id__notes_get
+- status: 404
+  title: Screen Not Found
+  schema: null
+  media: null
+  source_operations:
+  - openapi/aclid-openapi.yml#Stream_Screen_v2_screens__id__stream_get
+  - openapi/aclid-openapi.yml#Retrieve_Screen_Summary_v2_screens__id__get
+  - openapi/aclid-openapi.yml#Retrieve_Screen_Details_v2_screens__id__details_get
+- status: 404
+  title: Verification Not Found
+  schema: null
+  media: null
+  source_operations:
+  - openapi/aclid-openapi.yml#Retrieve_Verification_v2_verifications__screen_id__get
+- status: 422
+  title: Validation Error
+  schema: '#/components/schemas/HTTPValidationError'
+  media: application/json
+  source_operations:
+  - openapi/aclid-openapi.yml#handle_v2_screen_fasta_v2_screen_fasta_post
+  - openapi/aclid-openapi.yml#handle_v2_screen_csv_v2_screen_csv_post
+  - openapi/aclid-openapi.yml#handle_v2_screen_fasta_v2_screen_file_post
+  - openapi/aclid-openapi.yml#handle_v2_screen_fasta_v2_screen_post
+  - openapi/aclid-openapi.yml#Initiate_Screen__Inline__v2_screen_inline_post
+  - openapi/aclid-openapi.yml#List_Screens_v2_screens_get
+  - openapi/aclid-openapi.yml#Stream_Screen_v2_screens__id__stream_get
+  - openapi/aclid-openapi.yml#Retrieve_Screen_Summary_v2_screens__id__get
+  - openapi/aclid-openapi.yml#Retrieve_Screen_Details_v2_screens__id__details_get
+  - openapi/aclid-openapi.yml#Retrieve_Verification_v2_verifications__screen_id__get
+  - openapi/aclid-openapi.yml#Create_or_Update_a_Note_v2_notes_post
+  - openapi/aclid-openapi.yml#List_Screen_Notes_v2_screens__screen_id__notes_get
+  - openapi/aclid-openapi.yml#Create_Verification_URL_v2_verification_url__post
+  - openapi/aclid-openapi.yml#List_customers_v2_customers_get
+  - openapi/aclid-openapi.yml#Create_customer_v2_customers_post
+  - openapi/aclid-openapi.yml#Retrieve_customer_v2_customers__requester_id__get
+  - openapi/aclid-openapi.yml#List_Customer_Notes_v2_customers__requester_id__notes_get
+observed_statuses:
+- status: 403
+  title: Missing or invalid API key
+  evidence: GET https://api.aclid.bio/v2/screens -> 403 (probed 2026-09-06)
+  documented_in_spec: false
+- status: 404
+  title: Unmatched route
+  evidence: GET https://api.aclid.bio/openapi.yaml -> 404 (probed 2026-09-06)
+  documented_in_spec: false
+gaps:
+- No securitySchemes are declared in the OpenAPI, so no 401/403 response is documented on any operation even though
+  the API returns 403 for an unauthenticated call.
+- No 429 response and no rate-limit error is documented anywhere in the contract.
+- No 5xx response is documented on any operation.
