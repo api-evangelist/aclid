@@ -41,35 +41,16 @@ tags_raw:
 - risk-assessment
 - know-your-customer
 apis:
-- name: Aclid API
-  description: REST API for biosecurity screening and compliance automation. Initiate a pathogen/toxin sequence
-    screen from a FASTA or FASTQ upload, a CSV of named sequences, or an inline JSON payload; poll or retrieve the
-    screen summary, the full findings detail, or a pre-signed stream URL for large result sets; create and retrieve
-    customers (which also initiates a sanctions and watchlist screen); attach notes to screens and customers; and
-    mint a hosted or embeddable customer verification URL. Authentication is an API key passed verbatim in the HTTP
-    Authorization header, and the key itself selects live or test mode.
-  image: https://cdn.prod.website-files.com/671c02ec6144c945bfc5aa9c/6727db79308f1e1139096dd3_Logo.svg
+- aid: aclid:aclid-endpoints-api
+  name: Aclid Endpoints API
+  description: The Endpoints API from Aclid — 17 operation(s) for endpoints.
   humanURL: https://api.aclid.bio/docs
   baseURL: https://api.aclid.bio
   tags:
-  - Biosecurity
-  - Biosafety
-  - Compliance
-  - Synthetic Biology
-  - DNA Sequence Screening
-  - Sanctions Screening
-  - Export Control
-  tags_raw:
-  - biosecurity
-  - biosafety
-  - compliance
-  - synthetic-biology
-  - dna-sequence-screening
-  - sanctions-screening
-  - export-control
+  - Endpoints
   properties:
   - type: OpenAPI
-    url: openapi/aclid-openapi.yml
+    url: openapi/aclid-endpoints-api-openapi.yml
   - type: Documentation
     url: https://api.aclid.bio/docs
   - type: APIReference
@@ -84,8 +65,6 @@ apis:
     url: errors/aclid-problem-types.yml
   - type: DataModel
     url: data-model/aclid-data-model.yml
-  - type: Overlay
-    url: overlays/aclid-openapi-overlay.yaml
 common:
 - type: DomainSecurity
   url: security/aclid-domain-security.yml
