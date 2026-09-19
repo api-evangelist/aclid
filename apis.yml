@@ -27,7 +27,7 @@ tags:
 - Export Control
 - Biotechnology
 - Risk Assessment
-- Know Your Customer
+- KYC
 tags_raw:
 - biosecurity
 - biosafety
@@ -46,7 +46,8 @@ apis:
   description: The Endpoints API from Aclid — 17 operation(s) for endpoints.
   humanURL: https://api.aclid.bio/docs
   baseURL: https://api.aclid.bio
-  tags:
+  tags: []
+  tags_raw:
   - Endpoints
   properties:
   - type: OpenAPI
