@@ -1,0 +1,1936 @@
+openapi: 3.2.0
+info:
+  title: Aclid Endpoints API
+  description: 'The Aclid API is organized around
+
+    REST.
+
+    Our API has predictable resource-oriented URLs, returns
+
+    JSON-encoded
+
+    responses, and uses standard HTTP response codes and authentication.
+
+
+    You can use the Aclid API in test mode, which doesn''t affect your live data. The API key
+
+    you use to authenticate the request determines whether the request is live mode or test
+
+    mode.'
+  version: 2.2.1
+tags:
+- name: Endpoints
+paths:
+  /v2/screen_fasta:
+    post:
+      summary: Initiate Screen (FASTA File Upload)
+      description: 'Initiate a pathogen screen.
+
+
+        Input is a file (`Content-Type: multipart/form-data`), in either FASTA or
+
+        FASTQ format.
+
+        Files which are not valid FASTA or FASTQ will be rejected.
+
+
+        FASTA sequences must each be at least 30 base pairs in length. (FASTQ sequences may be any non-zero length.)
+
+        Total base pair count, across all sequences, may not exceed 1,000,000,000.'
+      operationId: handle_v2_screen_fasta_v2_screen_fasta_post
+      parameters:
+      - name: content-type
+        in: header
+        required: true
+        schema:
+          type: string
+          title: Content-Type
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_handle_v2_screen_fasta_v2_screen_fasta_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportsResponse'
+        '303':
+          description: Request was previously cached using the same idempotence key
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/screen_csv:
+    post:
+      summary: Initiate Screen (CSV File Upload)
+      description: 'Initiate a pathogen screen.
+
+
+        Input is a CSV file (`Content-Type: multipart/form-data`) that has the following format:
+
+        ```
+
+        name,sequence
+
+        cholera toxin A2 [Vibrio cholerae],ATGAGCAACACCTGCGACGAGAAGACCCAGAGCCTGGGCGTGAAGTTCCTGGACGAGTACCAGAGCAAGGTGAAGCGGCAGTACTTCAG
+
+        ```
+
+
+        (This example shows only one sequence, but you may pass in more than one.)
+
+
+        Sequences must each be at least 30 base pairs in length.
+
+        Total base pair count, across all sequences, cannot exceed 1,000,000,000.'
+      operationId: handle_v2_screen_csv_v2_screen_csv_post
+      parameters:
+      - name: content-type
+        in: header
+        required: true
+        schema:
+          type: string
+          title: Content-Type
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_handle_v2_screen_csv_v2_screen_csv_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportsResponse'
+        '303':
+          description: Request was previously cached using the same idempotence key
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/screen_file:
+    post:
+      summary: Initiate Screen (FASTA File Upload)
+      description: '`/screen_file` has been deprecated in favor of `/screen_fasta`. Please use that instead.'
+      operationId: handle_v2_screen_fasta_v2_screen_file_post
+      deprecated: true
+      parameters:
+      - name: content-type
+        in: header
+        required: true
+        schema:
+          type: string
+          title: Content-Type
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_handle_v2_screen_fasta_v2_screen_file_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportsResponse'
+        '303':
+          description: Request was previously cached using the same idempotence key
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/screen:
+    post:
+      summary: Initiate Screen (FASTA File Upload)
+      description: '`/screen` has been deprecated in favor of `/screen_fasta`. Please use that instead.'
+      operationId: handle_v2_screen_fasta_v2_screen_post
+      deprecated: true
+      parameters:
+      - name: content-type
+        in: header
+        required: true
+        schema:
+          type: string
+          title: Content-Type
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_handle_v2_screen_fasta_v2_screen_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportsResponse'
+        '303':
+          description: Request was previously cached using the same idempotence key
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/screen_inline:
+    post:
+      summary: Initiate Screen (Inline)
+      description: 'Initiate a pathogen screen.
+
+
+        Sequences must each be at least 30 base pairs in length.
+
+        Total base pair count, across all sequences, cannot exceed 1,000,000,000.
+
+
+        Input is a JSON request (`Content-Type: application/json`) that has the following body format:
+
+        ```
+
+        {
+
+        "name": "Screen for order #123456",
+
+        "sequences": [
+
+        {
+
+        "name": "cholera toxin A2 [Vibrio cholerae]",
+
+        "sequence": "ATGAGCAACACCTGCGACGAGAAGACCCAGAGCCTGGGCGTGAAGTTCCTGGACGAGTACCAGAGCAAGGTGAAGCGGCAGTACTTCAG"
+
+        }
+
+        ]
+
+        }
+
+        ```
+
+
+        (This example shows only one sequence, but you may pass in more than one.)'
+      operationId: Initiate_Screen__Inline__v2_screen_inline_post
+      parameters:
+      - name: content-type
+        in: header
+        required: true
+        schema:
+          type: string
+          title: Content-Type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_Initiate_Screen__Inline__v2_screen_inline_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportsResponse'
+        '303':
+          description: Request was previously cached using the same idempotence key
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/screens:
+    get:
+      summary: List Screens
+      description: 'Return a list of recent screens. Screens will include summary data.
+
+
+        Please refer to this
+
+        list of compliance reason codes.'
+      operationId: List_Screens_v2_screens_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 10
+          description: Limit on the number of items returned per page.
+          title: Limit
+        description: Limit on the number of items returned per page.
+      - name: screen_id
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          description: Limit items to specific screen_ids.
+          title: Screen Id
+        description: Limit items to specific screen_ids.
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScreenStatus'
+          title: Filter by status
+          description: Filter by status
+          default:
+          - queued
+          - running
+          - succeeded
+          - failed
+          - archived
+        description: Filter by status
+      - name: name
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          title: Filter by name
+          description: Filter by name
+        description: Filter by name
+      - name: expand
+        in: query
+        required: false
+        schema:
+          type: boolean
+          title: Expand
+          description: Expand the response with additional screen data
+          default: false
+        description: Expand the response with additional screen data
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: string
+          title: Cursor
+          description: A cursor for use in pagination
+        description: A cursor for use in pagination
+      - name: created_after
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+          title: Created After
+          description: Filter to include only reports created after this datetime
+        description: Filter to include only reports created after this datetime
+      - name: regulatory_status
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/RegulatoryStatus'
+          title: Regulatory Status
+          description: Filter by one or more regulatory statuses
+        description: Filter by one or more regulatory statuses
+      - name: verification_status
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/VerificationStatus'
+          title: Verification Status
+          description: Filter by one or more verification statuses
+        description: Filter by one or more verification statuses
+      - name: decision_status
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/DecisionStatus'
+          title: Decision Status
+          description: Filter by one or more decision statuses
+        description: Filter by one or more decision statuses
+      - name: search_str
+        in: query
+        required: false
+        schema:
+          type: string
+          title: Search by name
+          description: Search by name
+        description: Search by name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/screens/names:
+    get:
+      summary: List Screen Names
+      description: Return all screen names for the authenticated customer, removing duplicates.
+      operationId: List_Screen_Names_v2_screens_names_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  type: string
+                type: array
+                title: Response List Screen Names V2 Screens Names Get
+      tags:
+      - Endpoints
+  /v2/screens/{id}/stream:
+    get:
+      summary: Stream Screen
+      description: Return a pre-signed URL to a JSON/CSV file to stream a large screening result.
+      operationId: Stream_Screen_v2_screens__id__stream_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 5
+          maxLength: 36
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreamReportResponse'
+        '204':
+          description: Screen Not Ready
+        '404':
+          description: Screen Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/screens/{id}:
+    get:
+      summary: Retrieve Screen Summary
+      description: 'Return summary data for a previously submitted screen.
+
+
+        Please refer to this
+
+        list of compliance reason codes.'
+      operationId: Retrieve_Screen_Summary_v2_screens__id__get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 5
+          maxLength: 36
+          title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportMetadata'
+        '404':
+          description: Screen Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/screens/{id}/details:
+    get:
+      summary: Retrieve Screen Details
+      description: 'Return detailed data for a previously submitted screen, including match and assessment data.
+
+
+        Until the screen is completed, this endpoint will return an HTTP 204.
+
+
+        Please refer to this
+
+        list of compliance reason codes.'
+      operationId: Retrieve_Screen_Details_v2_screens__id__details_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 5
+          maxLength: 36
+          title: Id
+      - name: max_match_count_per_region
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: How many matches, at most, to return for each query.
+          min: 1
+          max: 250
+          default: 25
+          title: Max Match Count Per Region
+        description: How many matches, at most, to return for each query.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/MatchGroup'
+                title: Response Retrieve Screen Details V2 Screens  Id  Details Get
+        '204':
+          description: Screen Not Ready
+        '404':
+          description: Screen Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/verifications/{screen_id}:
+    get:
+      summary: Retrieve Verification
+      description: Return data for a previously submitted verification.
+      operationId: Retrieve_Verification_v2_verifications__screen_id__get
+      parameters:
+      - name: screen_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 5
+          maxLength: 36
+          title: Screen Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Followup'
+        '404':
+          description: Verification Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/notes:
+    post:
+      summary: Create Or Update A Note
+      operationId: Create_or_Update_a_Note_v2_notes_post
+      parameters:
+      - name: content-type
+        in: header
+        required: true
+        schema:
+          type: string
+          title: Content-Type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_Create_or_Update_a_Note_v2_notes_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/screens/{screen_id}/notes:
+    get:
+      summary: List Screen Notes
+      description: Returns a list of your screen notes.
+      operationId: List_Screen_Notes_v2_screens__screen_id__notes_get
+      parameters:
+      - name: screen_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 5
+          maxLength: 36
+          title: Screen Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Note'
+                title: Response List Screen Notes V2 Screens  Screen Id  Notes Get
+        '404':
+          description: Note Not Found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/verification_url/:
+    post:
+      summary: Create Verification Url
+      description: 'Create a verification URL to verify orders using an embedded integration or a flow hosted by Aclid.
+
+
+        Provide a `screen_id` obtained by first calling one of the Initiate Screen endpoints. The response will
+
+        include a URL that can be shared with a customer to submit additional information for an order.
+
+
+        Embedded Integration
+
+
+        The embedded flow is a drop-in module that lets you verify orders within your web page. The flow securely
+
+        collects and verifies compliance information without redirecting away from your website.
+
+
+        1. Confirm with the Aclid team that your website is in our allow lists.
+
+        2. Load the Aclid client in your application.
+
+
+        ```
+
+
+        ```
+
+        3. Create a verification URL using this endpoint.
+
+        4. Initialize the verification in whichever way is appropriate for your application.
+
+
+        ```
+
+        Aclid.showEmbeddedVerification(({ verificationUrl: string, onSuccess: function })
+
+        ```
+
+        Hosted Flow Integration
+
+
+        The hosted flow allows allows your team to verify orders through Aclid without spending time on development.
+
+        It is hosted by Aclid but its branding and theming is fully customizable.
+
+
+        1. Create a verification URL using this endpoint and optionally provide a `redirect_url` to redirect users back
+
+        to your website after verification.
+
+        2. Redirect from your website to the URL created in step 1.'
+      operationId: Create_Verification_URL_v2_verification_url__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_Create_Verification_URL_v2_verification_url__post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FollowupURLCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/customers:
+    get:
+      summary: List Customers
+      description: Returns a list of your customers. The customers are returned sorted by creation date, with the most recent customers appearing first.
+      operationId: List_customers_v2_customers_get
+      parameters:
+      - name: search_str
+        in: query
+        required: false
+        schema:
+          type: string
+          title: Search
+          description: Search by name or company
+        description: Search by name or company
+      - name: status_filter
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          title: Status
+          description: Filter by customer status
+          default: []
+        description: Filter by customer status
+      - name: decision_status
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          title: Decision Status
+          description: Filter by customer status
+          default: []
+        description: Filter by customer status
+      - name: page_index
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          title: Page Index
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerScreen'
+                title: Response List Customers V2 Customers Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+    post:
+      summary: Create Customer
+      description: Creates the customer and initiates a sanction and watchlist screen.
+      operationId: Create_customer_v2_customers_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body_Create_customer_v2_customers_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SanctionScreenCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/customers/{requester_id}:
+    get:
+      summary: Retrieve Customer
+      description: Returns customer data.
+      operationId: Retrieve_customer_v2_customers__requester_id__get
+      parameters:
+      - name: requester_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 5
+          maxLength: 36
+          title: Requester Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerScreen'
+        '404':
+          description: Customer not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+  /v2/customers/{requester_id}/notes:
+    get:
+      summary: List Customer Notes
+      description: Returns a list of your customer notes.
+      operationId: List_Customer_Notes_v2_customers__requester_id__notes_get
+      parameters:
+      - name: requester_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 5
+          maxLength: 36
+          title: Requester Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerNote'
+                title: Response List Customer Notes V2 Customers  Requester Id  Notes Get
+        '404':
+          description: Customer not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Endpoints
+components:
+  schemas:
+    Note:
+      properties:
+        note_id:
+          type: string
+          title: Note Id
+        created_by:
+          type: string
+          title: Created By
+        created_at:
+          type: integer
+          title: Created At
+          examples:
+          - 1620060337
+        note_content:
+          title: Note Content
+          type:
+          - string
+          - 'null'
+        decision_status:
+          anyOf:
+          - $ref: '#/components/schemas/DecisionStatus'
+          - type: 'null'
+      type: object
+      required:
+      - note_id
+      - created_by
+      - created_at
+      title: Note
+    RiskFactors:
+      properties:
+        distant_matches:
+          type: boolean
+          title: Only Distant Matches
+          description: All hits for this material are below 60% similarity
+        poorly_characterized:
+          type: boolean
+          title: Poorly Characterized Matches
+          description: No hits for this material have functional annotation data
+        close_match:
+          type: boolean
+          title: Close Sequence Match
+          description: At least one hit for this material is 80% similarity or higher
+        virulence:
+          type: boolean
+          title: Key Virulence Protein Covered
+          description: At least one hit for this material is linked to a pathogenesis-associated gene
+      type: object
+      required:
+      - distant_matches
+      - poorly_characterized
+      - close_match
+      - virulence
+      title: RiskFactors
+    MatchGroup:
+      properties:
+        matches:
+          items:
+            $ref: '#/components/schemas/Match'
+          type: array
+          title: Alignments
+          description: List of alignments to each sequence.
+        findings:
+          title: Regulatory Concerns
+          description: Map of regulatory concerns for an alignment. See compliance reason codes above.
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/Finding'
+        regulatory_status:
+          anyOf:
+          - $ref: '#/components/schemas/RegulatoryStatus'
+          - type: 'null'
+          title: Regulatory Status
+          description: Summary of the regulatory concerns. Use this field to quickly determine whether a compliance action is needed.
+      type: object
+      required:
+      - matches
+      - findings
+      - regulatory_status
+      title: MatchGroup
+    ScreenInputSequence:
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Unique sequence name
+          examples:
+          - cholera toxin A2 [Vibrio cholerae]
+        sequence:
+          type: string
+          minLength: 30
+          title: Sequence
+          examples:
+          - ATGAGCAACACCTGCGACGAGAAGACCCAGAGCCTGGGCGTGAAGTTCCTGGACGAGTACCAGAGCAAGGTGAAGCGGCAGTACTTCAG
+      type: object
+      required:
+      - name
+      - sequence
+      title: ScreenInputSequence
+    CustomerScreen:
+      properties:
+        name:
+          title: Name
+          type:
+          - string
+          - 'null'
+        address:
+          title: Address
+          type:
+          - string
+          - 'null'
+        company:
+          title: Company
+          type:
+          - string
+          - 'null'
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        status:
+          title: Status
+          type:
+          - string
+          - 'null'
+        requester_id:
+          type: string
+          title: Requester Id
+        decision_status:
+          $ref: '#/components/schemas/DecisionStatus'
+        sanctions_count:
+          title: Sanctions Count
+          type:
+          - integer
+          - 'null'
+        kyc_latest:
+          title: Kyc Latest
+          type:
+          - string
+          - 'null'
+          format: date-time
+        kyc_flags_count:
+          title: Kyc Flags Count
+          type:
+          - integer
+          - 'null'
+      type: object
+      required:
+      - created_at
+      - requester_id
+      - decision_status
+      title: CustomerScreen
+    Body_Initiate_Screen__Inline__v2_screen_inline_post:
+      properties:
+        name:
+          title: Upload Name
+          description: A display label that's useful for you to identify this screen. Unused by Aclid.
+          examples:
+          - 'Order #123456'
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        sequences:
+          items:
+            $ref: '#/components/schemas/ScreenInputSequence'
+          type: array
+          title: Sequences
+        idempotence_key:
+          title: Idempotence Key
+          description: Optional. Within any 24-hour window, the first screen request with a given idempotence key will be processed normally. However, subsequent screen requests (within 24 hours) with the same idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected (HTTP 303) to the original screen's summary.
+          examples:
+          - 4202ba63-5122-4904-b2d8-a3cbf81692de
+          type:
+          - string
+          - 'null'
+          maxLength: 60
+        asynchronous:
+          type: boolean
+          title: Asynchronous
+          description: Set asynchronous to false for real-time screening results
+          default: true
+        verification_success_url:
+          title: Verification Success Url
+          description: URL to redirect to after verification is completed
+          type:
+          - string
+          - 'null'
+        frameworks:
+          title: Frameworks
+          description: "Default: `['us_ccl_export_control', 'eu_dual_use_export_control', 'us_select_agent', 'us_screening_framework']`.\n\nList of frameworks to screen sequences against.\n\n Please refer to [this](#tag/Compliance-Reason-Codes) list of available frameworks. Reach out to us if you'd like to add a framework not currently available in the list above or if you'd like to use custom criteria exclusive to your account."
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        requester_id:
+          title: The associated requester id for this screen.
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        sequence_type:
+          $ref: '#/components/schemas/SequenceType'
+          title: Sequence Type
+          description: 'The type of the submitted sequences: `nucleotide` (default) or `amino_acid`. All sequences in a single screen must be of the same type.'
+          default: nucleotide
+      type: object
+      required:
+      - sequences
+      title: Body_Initiate_Screen__Inline__v2_screen_inline_post
+    MaterialSummary:
+      properties:
+        control_type:
+          title: Control Type
+          description: type of controlled material eg. virus
+          type:
+          - string
+          - 'null'
+        coverage:
+          title: Coverage
+          description: Coverage of this material in the regulatory status
+          type:
+          - number
+          - 'null'
+        unique_coverage:
+          title: Unique Coverage
+          description: Coverage of this material from sequences unique to this material
+          type:
+          - number
+          - 'null'
+        total_sequences:
+          type: integer
+          title: Total Sequence
+          description: Total sequences for this material in the regulatory status
+        risk_factors:
+          anyOf:
+          - $ref: '#/components/schemas/RiskFactors'
+          - type: 'null'
+          title: Risk Factors
+          description: Risk indicators computed from hits associated with this material
+      type: object
+      required:
+      - total_sequences
+      title: MaterialSummary
+    ReportMetadata:
+      properties:
+        id:
+          type: string
+          maxLength: 40
+          minLength: 5
+          title: Screen ID
+          description: Unique indentifier for this screen.
+          examples:
+          - 230408145715_yPSG4Ery
+        name:
+          title: Screen Name
+          description: User provided identifier for this screen.
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        user:
+          type: string
+          title: User ID
+          description: The ID of the user that initiated this screen.
+          examples:
+          - ash.braxton@reallygreatlab.com
+        verification_completed_at:
+          title: Verification Completed Date
+          type:
+          - string
+          - 'null'
+          format: date-time
+        verification_url:
+          title: Verification URL
+          type:
+          - string
+          - 'null'
+        created:
+          type: integer
+          title: Created
+          description: Specifies the time this screen was created in epoch format.
+        updated:
+          title: Updated
+          description: Specifies the time this screen was updated in epoch format.
+          type:
+          - integer
+          - 'null'
+        status:
+          $ref: '#/components/schemas/ScreenStatus'
+          title: Status
+          description: Indicates the status or state of the screen.
+        length:
+          title: Query Length
+          description: Cumulative length of all sequences in the screen.
+          type:
+          - integer
+          - 'null'
+        match_count:
+          title: Alignment Count
+          description: Cumulative number of alignments to all sequences in the screen.
+          type:
+          - integer
+          - 'null'
+        findings:
+          title: Regulatory Concerns
+          description: Map of regulatory concerns for the screen. See compliance reason codes above.
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/Finding'
+        regulatory_status:
+          anyOf:
+          - $ref: '#/components/schemas/RegulatoryStatus'
+          - type: 'null'
+          title: Regulatory Status
+          description: Summary of the regulatory concerns. Use this field to quickly determine whether a compliance action is needed.
+        sequences:
+          title: Sequences
+          description: Sequences of the screen.
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/MatchGroup'
+        version:
+          title: Version
+          description: Version of our internal screening tool used to generate this report.
+          type:
+          - string
+          - 'null'
+        verification_status:
+          anyOf:
+          - $ref: '#/components/schemas/VerificationStatus'
+          - type: 'null'
+          title: Verification Status
+          description: Status of the verification process.
+        decision_status:
+          anyOf:
+          - $ref: '#/components/schemas/DecisionStatus'
+          - type: 'null'
+          title: Decision Status
+          description: Acceptance status of a screen.
+        material_summary:
+          title: Material Summary
+          description: Summary of top materials in a screen
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/MaterialSummary'
+        material_count:
+          title: Controlled Material Count
+          description: Number of unique controlled materials in a screen
+          type:
+          - integer
+          - 'null'
+        request_frameworks:
+          title: Request Frameworks
+          description: List of frameworks requested in the screen.
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      type: object
+      required:
+      - id
+      - user
+      - created
+      - status
+      - findings
+      - regulatory_status
+      title: ReportMetadata
+    Body_Create_Verification_URL_v2_verification_url__post:
+      properties:
+        screen_id:
+          type: string
+          title: Screen Id
+          description: The screen id for which you want to create a verification.
+        redirect_url:
+          type: string
+          title: Redirect Url
+          description: The URL to redirect to after verification is completed.
+      type: object
+      required:
+      - screen_id
+      title: Body_Create_Verification_URL_v2_verification_url__post
+    Followup:
+      properties:
+        metadata:
+          type: string
+          title: Metadata
+          examples:
+          - '{"research_purpose": "The Research Purpose is this", "contact_name": "The Contact Name", "contact_email": "someone@email.com"}'
+        created_at:
+          type: integer
+          title: Created At
+          examples:
+          - 1620060337
+        completed_at:
+          type: integer
+          title: Completed At
+          examples:
+          - 1620060337
+        documentation_url:
+          title: Documentation Url
+          examples:
+          - https://aclid.bio/somefile.pdf
+          type:
+          - string
+          - 'null'
+        grant_docs:
+          items:
+            $ref: '#/components/schemas/GrantDoc'
+          type: array
+          title: Grant Docs
+      type: object
+      required:
+      - created_at
+      - grant_docs
+      title: Followup
+    SequenceType:
+      type: string
+      enum:
+      - nucleotide
+      - amino_acid
+      title: SequenceType
+    GrantDoc:
+      properties:
+        id:
+          type: string
+          title: Id
+        grant_id:
+          type: string
+          title: Grant Id
+        start_date:
+          title: Start Date
+          examples:
+          - 1620060337
+          type:
+          - string
+          - 'null'
+          format: date-time
+        end_date:
+          title: End Date
+          examples:
+          - 1620060337
+          type:
+          - string
+          - 'null'
+          format: date-time
+        office_agency_name:
+          title: Office Agency Name
+          type:
+          - string
+          - 'null'
+        recipient_name:
+          title: Recipient Name
+          type:
+          - string
+          - 'null'
+        recipient_address:
+          title: Recipient Address
+          type:
+          - string
+          - 'null'
+        description:
+          title: Description
+          type:
+          - string
+          - 'null'
+      type: object
+      required:
+      - id
+      - grant_id
+      - start_date
+      - end_date
+      title: GrantDoc
+    VerificationStatus:
+      type: string
+      enum:
+      - submitted
+      - partially_submitted
+      - missing_verification
+      - not_required
+      title: VerificationStatus
+    ReportsResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ReportMetadata'
+          type: array
+          title: Items
+        next_cursor:
+          title: Next Cursor
+          type:
+          - string
+          - 'null'
+      type: object
+      required:
+      - items
+      title: ReportsResponse
+    Body_handle_v2_screen_fasta_v2_screen_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: FASTA/FASTQ File
+          description: A valid FASTA or FASTQ file
+        name:
+          title: Upload Name
+          description: A display label that's useful for you to identify this screen. Unused by Aclid.
+          examples:
+          - 'Order #123456'
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        idempotence_key:
+          title: Idempotence Key
+          description: Optional. Within any 24-hour window, the first screen request with a given idempotence key will be processed normally. However, subsequent screen requests (within 24 hours) with the same idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected (HTTP 303) to the original screen's summary.
+          examples:
+          - 4202ba63-5122-4904-b2d8-a3cbf81692de
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        asynchronous:
+          type: boolean
+          title: Asynchronous
+          description: Set asynchronous to false to wait for real-time response
+          default: true
+        verification_success_url:
+          title: Verification Success Url
+          description: URL to redirect to after verification is completed
+          type:
+          - string
+          - 'null'
+        frameworks[]:
+          title: Frameworks[]
+          description: "Default: \n\nframeworks[]=us_ccl_export_control\n\nframeworks[]=eu_dual_use_export_control\n\nframeworks[]=us_select_agent\n\nframeworks[]=us_screening_framework\n\nList of frameworks to screen sequences against.\n\n Please refer to [this](#tag/Compliance-Reason-Codes) list of available frameworks. Reach out to us if you'd like to add a framework not currently available in the list above or if you'd like to use custom criteria exclusive to your account."
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        requester_id:
+          title: The associated requester id for this screen.
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        sequence_type:
+          $ref: '#/components/schemas/SequenceType'
+          title: Sequence Type
+          description: 'The type of the submitted sequences: `nucleotide` (default) or `amino_acid`. All sequences in a single screen must be of the same type.'
+          default: nucleotide
+      type: object
+      required:
+      - file
+      title: Body_handle_v2_screen_fasta_v2_screen_post
+    Match:
+      properties:
+        query:
+          type: string
+          title: Query
+        qstart:
+          type: integer
+          title: Query Start
+        qend:
+          type: integer
+          title: Query End
+        qlen:
+          title: Query Length
+          type:
+          - integer
+          - 'null'
+        sseqid:
+          type: string
+          title: Subject Sequence ID
+        sstart:
+          type: integer
+          title: Subject Start
+        send:
+          type: integer
+          title: Subject End
+        slen:
+          type: integer
+          title: Subject Length
+        length:
+          type: integer
+          title: Length
+        evalue:
+          type: number
+          title: E-value
+        bitscore:
+          type: number
+          title: Bit-score
+        taxid:
+          type: integer
+          title: Taxonomy ID
+        organism:
+          type: string
+          title: Organism
+        gene:
+          title: Gene
+          type:
+          - string
+          - 'null'
+        function:
+          title: Function
+          type:
+          - string
+          - 'null'
+        go:
+          items:
+            $ref: '#/components/schemas/GeneOntology'
+          type: array
+          title: Gene Ontology
+        funsocs:
+          items:
+            $ref: '#/components/schemas/FunSoC'
+          type: array
+          title: Functional Sequences of Concern
+        pident:
+          type: number
+          title: Percent Identity
+        qcov:
+          type: number
+          title: Query Coverage
+        scov:
+          type: number
+          title: Subject Coverage
+        findings:
+          additionalProperties:
+            $ref: '#/components/schemas/Finding'
+          type: object
+          title: Regulatory Concerns
+          description: Map of regulatory concerns for an alignment. See compliance reason codes above.
+        regulatory_status:
+          $ref: '#/components/schemas/RegulatoryStatus'
+          title: Regulatory Status
+        pathogenesis:
+          type: boolean
+          title: Pathogenesis
+        housekeeping:
+          type: boolean
+          title: Housekeeping
+      type: object
+      required:
+      - query
+      - qstart
+      - qend
+      - qlen
+      - sseqid
+      - sstart
+      - send
+      - slen
+      - length
+      - evalue
+      - bitscore
+      - taxid
+      - organism
+      - go
+      - funsocs
+      - pident
+      - qcov
+      - scov
+      - findings
+      - regulatory_status
+      - pathogenesis
+      - housekeeping
+      title: Match
+    FunSoC:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+      type: object
+      required:
+      - name
+      - description
+      title: FunSoC
+    GeneOntology:
+      properties:
+        name:
+          type: string
+          title: Name
+        definition:
+          type: string
+          title: Definition
+      type: object
+      required:
+      - name
+      - definition
+      title: GeneOntology
+    Body_Create_or_Update_a_Note_v2_notes_post:
+      properties:
+        screen_id:
+          type: string
+          title: Screen Id
+        content:
+          title: Content
+          type:
+          - string
+          - 'null'
+        note_id:
+          title: Note Id
+          type:
+          - string
+          - 'null'
+        decision_status:
+          anyOf:
+          - $ref: '#/components/schemas/DecisionStatus'
+          - type: 'null'
+      type: object
+      required:
+      - screen_id
+      title: Body_Create_or_Update_a_Note_v2_notes_post
+    SanctionScreenCreateResponse:
+      properties:
+        requester_id:
+          type: string
+          title: Requester Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - requester_id
+      - status
+      title: SanctionScreenCreateResponse
+    ScreenStatus:
+      type: string
+      enum:
+      - pending_upload
+      - queued
+      - running
+      - succeeded
+      - failed
+      - deleted
+      - archived
+      title: ScreenStatus
+    FollowupURLCreateResponse:
+      properties:
+        url:
+          type: string
+          title: Url
+          examples:
+          - https://verify.aclid.bio/?access_token=aclid-access-1234
+      type: object
+      required:
+      - url
+      title: FollowupURLCreateResponse
+    Body_Create_customer_v2_customers_post:
+      properties:
+        name:
+          type: string
+          title: Name
+        company:
+          type: string
+          title: Company
+        address:
+          type: string
+          title: Address
+        country:
+          type: string
+          title: Country
+        screen_id:
+          type: string
+          title: Screen Id
+      type: object
+      required:
+      - name
+      - company
+      title: Body_Create_customer_v2_customers_post
+    StreamReportResponse:
+      properties:
+        url:
+          type: string
+          title: Url
+      type: object
+      required:
+      - url
+      title: StreamReportResponse
+    CustomerNote:
+      properties:
+        note_id:
+          type: string
+          title: Note Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        note_content:
+          title: Note Content
+          type:
+          - string
+          - 'null'
+        decision_status:
+          anyOf:
+          - $ref: '#/components/schemas/DecisionStatus'
+          - type: 'null'
+      type: object
+      required:
+      - note_id
+      - created_at
+      title: CustomerNote
+    Body_handle_v2_screen_csv_v2_screen_csv_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: CSV File
+          description: A valid CSV sequence file
+        name:
+          title: Upload Name
+          description: A display label that's useful for you to identify this screen. Unused by Aclid.
+          examples:
+          - 'Order #123456'
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        idempotence_key:
+          title: Idempotence Key
+          description: Optional. Within any 24-hour window, the first screen request with a given idempotence key will be processed normally. However, subsequent screen requests (within 24 hours) with the same idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected (HTTP 303) to the original screen's summary.
+          examples:
+          - 4202ba63-5122-4904-b2d8-a3cbf81692de
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        asynchronous:
+          type: boolean
+          title: Asynchronous
+          description: Set asynchronous to false to wait for real-time response
+          default: true
+        verification_success_url:
+          title: Verification Success Url
+          description: URL to redirect to after verification is completed
+          type:
+          - string
+          - 'null'
+        frameworks[]:
+          title: Frameworks[]
+          description: "Default: \n\nframeworks[]=us_ccl_export_control\n\nframeworks[]=eu_dual_use_export_control\n\nframeworks[]=us_select_agent\n\nframeworks[]=us_screening_framework\n\nList of frameworks to screen sequences against.\n\n Please refer to [this](#tag/Compliance-Reason-Codes) list of available frameworks. Reach out to us if you'd like to add a framework not currently available in the list above or if you'd like to use custom criteria exclusive to your account."
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        requester_id:
+          title: The associated requester id for this screen.
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        sequence_type:
+          $ref: '#/components/schemas/SequenceType'
+          title: Sequence Type
+          description: 'The type of the submitted sequences: `nucleotide` (default) or `amino_acid`. All sequences in a single screen must be of the same type.'
+          default: nucleotide
+      type: object
+      required:
+      - file
+      title: Body_handle_v2_screen_csv_v2_screen_csv_post
+    Body_handle_v2_screen_fasta_v2_screen_file_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: FASTA/FASTQ File
+          description: A valid FASTA or FASTQ file
+        name:
+          title: Upload Name
+          description: A display label that's useful for you to identify this screen. Unused by Aclid.
+          examples:
+          - 'Order #123456'
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        idempotence_key:
+          title: Idempotence Key
+          description: Optional. Within any 24-hour window, the first screen request with a given idempotence key will be processed normally. However, subsequent screen requests (within 24 hours) with the same idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected (HTTP 303) to the original screen's summary.
+          examples:
+          - 4202ba63-5122-4904-b2d8-a3cbf81692de
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        asynchronous:
+          type: boolean
+          title: Asynchronous
+          description: Set asynchronous to false to wait for real-time response
+          default: true
+        verification_success_url:
+          title: Verification Success Url
+          description: URL to redirect to after verification is completed
+          type:
+          - string
+          - 'null'
+        frameworks[]:
+          title: Frameworks[]
+          description: "Default: \n\nframeworks[]=us_ccl_export_control\n\nframeworks[]=eu_dual_use_export_control\n\nframeworks[]=us_select_agent\n\nframeworks[]=us_screening_framework\n\nList of frameworks to screen sequences against.\n\n Please refer to [this](#tag/Compliance-Reason-Codes) list of available frameworks. Reach out to us if you'd like to add a framework not currently available in the list above or if you'd like to use custom criteria exclusive to your account."
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        requester_id:
+          title: The associated requester id for this screen.
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        sequence_type:
+          $ref: '#/components/schemas/SequenceType'
+          title: Sequence Type
+          description: 'The type of the submitted sequences: `nucleotide` (default) or `amino_acid`. All sequences in a single screen must be of the same type.'
+          default: nucleotide
+      type: object
+      required:
+      - file
+      title: Body_handle_v2_screen_fasta_v2_screen_file_post
+    Finding:
+      properties:
+        reason_code:
+          title: Reason Code
+          type:
+          - string
+          - 'null'
+        regulatory_status:
+          $ref: '#/components/schemas/RegulatoryStatus'
+        material:
+          title: Material
+          type:
+          - string
+          - 'null'
+      type: object
+      required:
+      - regulatory_status
+      title: Finding
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DecisionStatus:
+      type: string
+      enum:
+      - awaiting
+      - approved
+      - rejected
+      - escalated
+      title: DecisionStatus
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RegulatoryStatus:
+      type: string
+      enum:
+      - controlled
+      - not_controlled
+      title: RegulatoryStatus
+    Body_handle_v2_screen_fasta_v2_screen_fasta_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: FASTA/FASTQ File
+          description: A valid FASTA or FASTQ file
+        name:
+          title: Upload Name
+          description: A display label that's useful for you to identify this screen. Unused by Aclid.
+          examples:
+          - 'Order #123456'
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        idempotence_key:
+          title: Idempotence Key
+          description: Optional. Within any 24-hour window, the first screen request with a given idempotence key will be processed normally. However, subsequent screen requests (within 24 hours) with the same idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected (HTTP 303) to the original screen's summary.
+          examples:
+          - 4202ba63-5122-4904-b2d8-a3cbf81692de
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        asynchronous:
+          type: boolean
+          title: Asynchronous
+          description: Set asynchronous to false to wait for real-time response
+          default: true
+        verification_success_url:
+          title: Verification Success Url
+          description: URL to redirect to after verification is completed
+          type:
+          - string
+          - 'null'
+        frameworks[]:
+          title: Frameworks[]
+          description: "Default: \n\nframeworks[]=us_ccl_export_control\n\nframeworks[]=eu_dual_use_export_control\n\nframeworks[]=us_select_agent\n\nframeworks[]=us_screening_framework\n\nList of frameworks to screen sequences against.\n\n Please refer to [this](#tag/Compliance-Reason-Codes) list of available frameworks. Reach out to us if you'd like to add a framework not currently available in the list above or if you'd like to use custom criteria exclusive to your account."
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        requester_id:
+          title: The associated requester id for this screen.
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        sequence_type:
+          $ref: '#/components/schemas/SequenceType'
+          title: Sequence Type
+          description: 'The type of the submitted sequences: `nucleotide` (default) or `amino_acid`. All sequences in a single screen must be of the same type.'
+          default: nucleotide
+      type: object
+      required:
+      - file
+      title: Body_handle_v2_screen_fasta_v2_screen_fasta_post
+x-tagGroups:
+- name: Getting Started
+  tags:
+  - Authentication
+- name: API
+  tags:
+  - Endpoints
+- name: Reference
+  tags:
+  - Compliance Reason Codes
