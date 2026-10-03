@@ -864,36 +864,337 @@ paths:
       - Endpoints
 components:
   schemas:
-    SequenceType:
-      type: string
-      enum:
-      - nucleotide
-      - amino_acid
-      title: SequenceType
-    ScreenStatus:
-      type: string
-      enum:
-      - pending_upload
-      - queued
-      - running
-      - succeeded
-      - failed
-      - deleted
-      - archived
-      title: ScreenStatus
-    FunSoC:
+    Body_handle_v2_screen_fasta_v2_screen_fasta_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: FASTA/FASTQ File
+          description: A valid FASTA or FASTQ file
+        name:
+          title: Upload Name
+          description: A display label that's useful for you to identify this screen. Unused by Aclid.
+          examples:
+          - 'Order #123456'
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        idempotence_key:
+          title: Idempotence Key
+          description: Optional. Within any 24-hour window, the first screen request with a given idempotence key will be processed normally. However, subsequent screen requests (within 24 hours) with the same idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected (HTTP 303) to the original screen's summary.
+          examples:
+          - 4202ba63-5122-4904-b2d8-a3cbf81692de
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        asynchronous:
+          type: boolean
+          title: Asynchronous
+          description: Set asynchronous to false to wait for real-time response
+          default: true
+        verification_success_url:
+          title: Verification Success Url
+          description: URL to redirect to after verification is completed
+          type:
+          - string
+          - 'null'
+        frameworks[]:
+          title: Frameworks[]
+          description: "Default: \n\nframeworks[]=us_ccl_export_control\n\nframeworks[]=eu_dual_use_export_control\n\nframeworks[]=us_select_agent\n\nframeworks[]=us_screening_framework\n\nList of frameworks to screen sequences against.\n\n Please refer to [this](#tag/Compliance-Reason-Codes) list of available frameworks. Reach out to us if you'd like to add a framework not currently available in the list above or if you'd like to use custom criteria exclusive to your account."
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        requester_id:
+          title: The associated requester id for this screen.
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        sequence_type:
+          $ref: '#/components/schemas/SequenceType'
+          title: Sequence Type
+          description: 'The type of the submitted sequences: `nucleotide` (default) or `amino_acid`. All sequences in a single screen must be of the same type.'
+          default: nucleotide
+      type: object
+      required:
+      - file
+      title: Body_handle_v2_screen_fasta_v2_screen_fasta_post
+    GrantDoc:
+      properties:
+        id:
+          type: string
+          title: Id
+        grant_id:
+          type: string
+          title: Grant Id
+        start_date:
+          title: Start Date
+          examples:
+          - 1620060337
+          type:
+          - string
+          - 'null'
+          format: date-time
+        end_date:
+          title: End Date
+          examples:
+          - 1620060337
+          type:
+          - string
+          - 'null'
+          format: date-time
+        office_agency_name:
+          title: Office Agency Name
+          type:
+          - string
+          - 'null'
+        recipient_name:
+          title: Recipient Name
+          type:
+          - string
+          - 'null'
+        recipient_address:
+          title: Recipient Address
+          type:
+          - string
+          - 'null'
+        description:
+          title: Description
+          type:
+          - string
+          - 'null'
+      type: object
+      required:
+      - id
+      - grant_id
+      - start_date
+      - end_date
+      title: GrantDoc
+    Body_Create_or_Update_a_Note_v2_notes_post:
+      properties:
+        screen_id:
+          type: string
+          title: Screen Id
+        content:
+          title: Content
+          type:
+          - string
+          - 'null'
+        note_id:
+          title: Note Id
+          type:
+          - string
+          - 'null'
+        decision_status:
+          anyOf:
+          - $ref: '#/components/schemas/DecisionStatus'
+          - type: 'null'
+      type: object
+      required:
+      - screen_id
+      title: Body_Create_or_Update_a_Note_v2_notes_post
+    Body_handle_v2_screen_csv_v2_screen_csv_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: CSV File
+          description: A valid CSV sequence file
+        name:
+          title: Upload Name
+          description: A display label that's useful for you to identify this screen. Unused by Aclid.
+          examples:
+          - 'Order #123456'
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        idempotence_key:
+          title: Idempotence Key
+          description: Optional. Within any 24-hour window, the first screen request with a given idempotence key will be processed normally. However, subsequent screen requests (within 24 hours) with the same idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected (HTTP 303) to the original screen's summary.
+          examples:
+          - 4202ba63-5122-4904-b2d8-a3cbf81692de
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        asynchronous:
+          type: boolean
+          title: Asynchronous
+          description: Set asynchronous to false to wait for real-time response
+          default: true
+        verification_success_url:
+          title: Verification Success Url
+          description: URL to redirect to after verification is completed
+          type:
+          - string
+          - 'null'
+        frameworks[]:
+          title: Frameworks[]
+          description: "Default: \n\nframeworks[]=us_ccl_export_control\n\nframeworks[]=eu_dual_use_export_control\n\nframeworks[]=us_select_agent\n\nframeworks[]=us_screening_framework\n\nList of frameworks to screen sequences against.\n\n Please refer to [this](#tag/Compliance-Reason-Codes) list of available frameworks. Reach out to us if you'd like to add a framework not currently available in the list above or if you'd like to use custom criteria exclusive to your account."
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        requester_id:
+          title: The associated requester id for this screen.
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        sequence_type:
+          $ref: '#/components/schemas/SequenceType'
+          title: Sequence Type
+          description: 'The type of the submitted sequences: `nucleotide` (default) or `amino_acid`. All sequences in a single screen must be of the same type.'
+          default: nucleotide
+      type: object
+      required:
+      - file
+      title: Body_handle_v2_screen_csv_v2_screen_csv_post
+    StreamReportResponse:
+      properties:
+        url:
+          type: string
+          title: Url
+      type: object
+      required:
+      - url
+      title: StreamReportResponse
+    Body_handle_v2_screen_fasta_v2_screen_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: FASTA/FASTQ File
+          description: A valid FASTA or FASTQ file
+        name:
+          title: Upload Name
+          description: A display label that's useful for you to identify this screen. Unused by Aclid.
+          examples:
+          - 'Order #123456'
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        idempotence_key:
+          title: Idempotence Key
+          description: Optional. Within any 24-hour window, the first screen request with a given idempotence key will be processed normally. However, subsequent screen requests (within 24 hours) with the same idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected (HTTP 303) to the original screen's summary.
+          examples:
+          - 4202ba63-5122-4904-b2d8-a3cbf81692de
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        asynchronous:
+          type: boolean
+          title: Asynchronous
+          description: Set asynchronous to false to wait for real-time response
+          default: true
+        verification_success_url:
+          title: Verification Success Url
+          description: URL to redirect to after verification is completed
+          type:
+          - string
+          - 'null'
+        frameworks[]:
+          title: Frameworks[]
+          description: "Default: \n\nframeworks[]=us_ccl_export_control\n\nframeworks[]=eu_dual_use_export_control\n\nframeworks[]=us_select_agent\n\nframeworks[]=us_screening_framework\n\nList of frameworks to screen sequences against.\n\n Please refer to [this](#tag/Compliance-Reason-Codes) list of available frameworks. Reach out to us if you'd like to add a framework not currently available in the list above or if you'd like to use custom criteria exclusive to your account."
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        requester_id:
+          title: The associated requester id for this screen.
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        sequence_type:
+          $ref: '#/components/schemas/SequenceType'
+          title: Sequence Type
+          description: 'The type of the submitted sequences: `nucleotide` (default) or `amino_acid`. All sequences in a single screen must be of the same type.'
+          default: nucleotide
+      type: object
+      required:
+      - file
+      title: Body_handle_v2_screen_fasta_v2_screen_post
+    ScreenInputSequence:
       properties:
         name:
           type: string
-          title: Name
-        description:
+          maxLength: 200
+          minLength: 1
+          title: Unique sequence name
+          examples:
+          - cholera toxin A2 [Vibrio cholerae]
+        sequence:
           type: string
-          title: Description
+          minLength: 30
+          title: Sequence
+          examples:
+          - ATGAGCAACACCTGCGACGAGAAGACCCAGAGCCTGGGCGTGAAGTTCCTGGACGAGTACCAGAGCAAGGTGAAGCGGCAGTACTTCAG
       type: object
       required:
       - name
-      - description
-      title: FunSoC
+      - sequence
+      title: ScreenInputSequence
+    RiskFactors:
+      properties:
+        distant_matches:
+          type: boolean
+          title: Only Distant Matches
+          description: All hits for this material are below 60% similarity
+        poorly_characterized:
+          type: boolean
+          title: Poorly Characterized Matches
+          description: No hits for this material have functional annotation data
+        close_match:
+          type: boolean
+          title: Close Sequence Match
+          description: At least one hit for this material is 80% similarity or higher
+        virulence:
+          type: boolean
+          title: Key Virulence Protein Covered
+          description: At least one hit for this material is linked to a pathogenesis-associated gene
+      type: object
+      required:
+      - distant_matches
+      - poorly_characterized
+      - close_match
+      - virulence
+      title: RiskFactors
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     Body_handle_v2_screen_fasta_v2_screen_file_post:
       properties:
         file:
@@ -953,14 +1254,12 @@ components:
       required:
       - file
       title: Body_handle_v2_screen_fasta_v2_screen_file_post
-    VerificationStatus:
+    RegulatoryStatus:
       type: string
       enum:
-      - submitted
-      - partially_submitted
-      - missing_verification
-      - not_required
-      title: VerificationStatus
+      - controlled
+      - not_controlled
+      title: RegulatoryStatus
     Finding:
       properties:
         reason_code:
@@ -979,87 +1278,6 @@ components:
       required:
       - regulatory_status
       title: Finding
-    Note:
-      properties:
-        note_id:
-          type: string
-          title: Note Id
-        created_by:
-          type: string
-          title: Created By
-        created_at:
-          type: integer
-          title: Created At
-          examples:
-          - 1620060337
-        note_content:
-          title: Note Content
-          type:
-          - string
-          - 'null'
-        decision_status:
-          anyOf:
-          - $ref: '#/components/schemas/DecisionStatus'
-          - type: 'null'
-      type: object
-      required:
-      - note_id
-      - created_by
-      - created_at
-      title: Note
-    CustomerScreen:
-      properties:
-        name:
-          title: Name
-          type:
-          - string
-          - 'null'
-        address:
-          title: Address
-          type:
-          - string
-          - 'null'
-        company:
-          title: Company
-          type:
-          - string
-          - 'null'
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        status:
-          title: Status
-          type:
-          - string
-          - 'null'
-        requester_id:
-          type: string
-          title: Requester Id
-        decision_status:
-          $ref: '#/components/schemas/DecisionStatus'
-        sanctions_count:
-          title: Sanctions Count
-          type:
-          - integer
-          - 'null'
-        kyc_latest:
-          title: Kyc Latest
-          type:
-          - string
-          - 'null'
-          format: date-time
-        kyc_flags_count:
-          title: Kyc Flags Count
-          type:
-          - integer
-          - 'null'
-      type: object
-      required:
-      - created_at
-      - requester_id
-      - decision_status
-      title: CustomerScreen
     Match:
       properties:
         query:
@@ -1172,6 +1390,58 @@ components:
       - pathogenesis
       - housekeeping
       title: Match
+    ScreenStatus:
+      type: string
+      enum:
+      - pending_upload
+      - queued
+      - running
+      - succeeded
+      - failed
+      - deleted
+      - archived
+      title: ScreenStatus
+    FunSoC:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+      type: object
+      required:
+      - name
+      - description
+      title: FunSoC
+    Note:
+      properties:
+        note_id:
+          type: string
+          title: Note Id
+        created_by:
+          type: string
+          title: Created By
+        created_at:
+          type: integer
+          title: Created At
+          examples:
+          - 1620060337
+        note_content:
+          title: Note Content
+          type:
+          - string
+          - 'null'
+        decision_status:
+          anyOf:
+          - $ref: '#/components/schemas/DecisionStatus'
+          - type: 'null'
+      type: object
+      required:
+      - note_id
+      - created_by
+      - created_at
+      title: Note
     Body_Create_Verification_URL_v2_verification_url__post:
       properties:
         screen_id:
@@ -1186,343 +1456,6 @@ components:
       required:
       - screen_id
       title: Body_Create_Verification_URL_v2_verification_url__post
-    Body_handle_v2_screen_csv_v2_screen_csv_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: CSV File
-          description: A valid CSV sequence file
-        name:
-          title: Upload Name
-          description: A display label that's useful for you to identify this screen. Unused by Aclid.
-          examples:
-          - 'Order #123456'
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        idempotence_key:
-          title: Idempotence Key
-          description: Optional. Within any 24-hour window, the first screen request with a given idempotence key will be processed normally. However, subsequent screen requests (within 24 hours) with the same idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected (HTTP 303) to the original screen's summary.
-          examples:
-          - 4202ba63-5122-4904-b2d8-a3cbf81692de
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        asynchronous:
-          type: boolean
-          title: Asynchronous
-          description: Set asynchronous to false to wait for real-time response
-          default: true
-        verification_success_url:
-          title: Verification Success Url
-          description: URL to redirect to after verification is completed
-          type:
-          - string
-          - 'null'
-        frameworks[]:
-          title: Frameworks[]
-          description: "Default: \n\nframeworks[]=us_ccl_export_control\n\nframeworks[]=eu_dual_use_export_control\n\nframeworks[]=us_select_agent\n\nframeworks[]=us_screening_framework\n\nList of frameworks to screen sequences against.\n\n Please refer to [this](#tag/Compliance-Reason-Codes) list of available frameworks. Reach out to us if you'd like to add a framework not currently available in the list above or if you'd like to use custom criteria exclusive to your account."
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        requester_id:
-          title: The associated requester id for this screen.
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        sequence_type:
-          $ref: '#/components/schemas/SequenceType'
-          title: Sequence Type
-          description: 'The type of the submitted sequences: `nucleotide` (default) or `amino_acid`. All sequences in a single screen must be of the same type.'
-          default: nucleotide
-      type: object
-      required:
-      - file
-      title: Body_handle_v2_screen_csv_v2_screen_csv_post
-    FollowupURLCreateResponse:
-      properties:
-        url:
-          type: string
-          title: Url
-          examples:
-          - https://verify.aclid.bio/?access_token=aclid-access-1234
-      type: object
-      required:
-      - url
-      title: FollowupURLCreateResponse
-    Body_handle_v2_screen_fasta_v2_screen_fasta_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: FASTA/FASTQ File
-          description: A valid FASTA or FASTQ file
-        name:
-          title: Upload Name
-          description: A display label that's useful for you to identify this screen. Unused by Aclid.
-          examples:
-          - 'Order #123456'
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        idempotence_key:
-          title: Idempotence Key
-          description: Optional. Within any 24-hour window, the first screen request with a given idempotence key will be processed normally. However, subsequent screen requests (within 24 hours) with the same idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected (HTTP 303) to the original screen's summary.
-          examples:
-          - 4202ba63-5122-4904-b2d8-a3cbf81692de
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        asynchronous:
-          type: boolean
-          title: Asynchronous
-          description: Set asynchronous to false to wait for real-time response
-          default: true
-        verification_success_url:
-          title: Verification Success Url
-          description: URL to redirect to after verification is completed
-          type:
-          - string
-          - 'null'
-        frameworks[]:
-          title: Frameworks[]
-          description: "Default: \n\nframeworks[]=us_ccl_export_control\n\nframeworks[]=eu_dual_use_export_control\n\nframeworks[]=us_select_agent\n\nframeworks[]=us_screening_framework\n\nList of frameworks to screen sequences against.\n\n Please refer to [this](#tag/Compliance-Reason-Codes) list of available frameworks. Reach out to us if you'd like to add a framework not currently available in the list above or if you'd like to use custom criteria exclusive to your account."
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        requester_id:
-          title: The associated requester id for this screen.
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        sequence_type:
-          $ref: '#/components/schemas/SequenceType'
-          title: Sequence Type
-          description: 'The type of the submitted sequences: `nucleotide` (default) or `amino_acid`. All sequences in a single screen must be of the same type.'
-          default: nucleotide
-      type: object
-      required:
-      - file
-      title: Body_handle_v2_screen_fasta_v2_screen_fasta_post
-    ScreenInputSequence:
-      properties:
-        name:
-          type: string
-          maxLength: 200
-          minLength: 1
-          title: Unique sequence name
-          examples:
-          - cholera toxin A2 [Vibrio cholerae]
-        sequence:
-          type: string
-          minLength: 30
-          title: Sequence
-          examples:
-          - ATGAGCAACACCTGCGACGAGAAGACCCAGAGCCTGGGCGTGAAGTTCCTGGACGAGTACCAGAGCAAGGTGAAGCGGCAGTACTTCAG
-      type: object
-      required:
-      - name
-      - sequence
-      title: ScreenInputSequence
-    Followup:
-      properties:
-        metadata:
-          type: string
-          title: Metadata
-          examples:
-          - '{"research_purpose": "The Research Purpose is this", "contact_name": "The Contact Name", "contact_email": "someone@email.com"}'
-        created_at:
-          type: integer
-          title: Created At
-          examples:
-          - 1620060337
-        completed_at:
-          type: integer
-          title: Completed At
-          examples:
-          - 1620060337
-        documentation_url:
-          title: Documentation Url
-          examples:
-          - https://aclid.bio/somefile.pdf
-          type:
-          - string
-          - 'null'
-        grant_docs:
-          items:
-            $ref: '#/components/schemas/GrantDoc'
-          type: array
-          title: Grant Docs
-      type: object
-      required:
-      - created_at
-      - grant_docs
-      title: Followup
-    MaterialSummary:
-      properties:
-        control_type:
-          title: Control Type
-          description: type of controlled material eg. virus
-          type:
-          - string
-          - 'null'
-        coverage:
-          title: Coverage
-          description: Coverage of this material in the regulatory status
-          type:
-          - number
-          - 'null'
-        unique_coverage:
-          title: Unique Coverage
-          description: Coverage of this material from sequences unique to this material
-          type:
-          - number
-          - 'null'
-        total_sequences:
-          type: integer
-          title: Total Sequence
-          description: Total sequences for this material in the regulatory status
-        risk_factors:
-          anyOf:
-          - $ref: '#/components/schemas/RiskFactors'
-          - type: 'null'
-          title: Risk Factors
-          description: Risk indicators computed from hits associated with this material
-      type: object
-      required:
-      - total_sequences
-      title: MaterialSummary
-    RiskFactors:
-      properties:
-        distant_matches:
-          type: boolean
-          title: Only Distant Matches
-          description: All hits for this material are below 60% similarity
-        poorly_characterized:
-          type: boolean
-          title: Poorly Characterized Matches
-          description: No hits for this material have functional annotation data
-        close_match:
-          type: boolean
-          title: Close Sequence Match
-          description: At least one hit for this material is 80% similarity or higher
-        virulence:
-          type: boolean
-          title: Key Virulence Protein Covered
-          description: At least one hit for this material is linked to a pathogenesis-associated gene
-      type: object
-      required:
-      - distant_matches
-      - poorly_characterized
-      - close_match
-      - virulence
-      title: RiskFactors
-    Body_handle_v2_screen_fasta_v2_screen_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: FASTA/FASTQ File
-          description: A valid FASTA or FASTQ file
-        name:
-          title: Upload Name
-          description: A display label that's useful for you to identify this screen. Unused by Aclid.
-          examples:
-          - 'Order #123456'
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        idempotence_key:
-          title: Idempotence Key
-          description: Optional. Within any 24-hour window, the first screen request with a given idempotence key will be processed normally. However, subsequent screen requests (within 24 hours) with the same idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected (HTTP 303) to the original screen's summary.
-          examples:
-          - 4202ba63-5122-4904-b2d8-a3cbf81692de
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        asynchronous:
-          type: boolean
-          title: Asynchronous
-          description: Set asynchronous to false to wait for real-time response
-          default: true
-        verification_success_url:
-          title: Verification Success Url
-          description: URL to redirect to after verification is completed
-          type:
-          - string
-          - 'null'
-        frameworks[]:
-          title: Frameworks[]
-          description: "Default: \n\nframeworks[]=us_ccl_export_control\n\nframeworks[]=eu_dual_use_export_control\n\nframeworks[]=us_select_agent\n\nframeworks[]=us_screening_framework\n\nList of frameworks to screen sequences against.\n\n Please refer to [this](#tag/Compliance-Reason-Codes) list of available frameworks. Reach out to us if you'd like to add a framework not currently available in the list above or if you'd like to use custom criteria exclusive to your account."
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        requester_id:
-          title: The associated requester id for this screen.
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        sequence_type:
-          $ref: '#/components/schemas/SequenceType'
-          title: Sequence Type
-          description: 'The type of the submitted sequences: `nucleotide` (default) or `amino_acid`. All sequences in a single screen must be of the same type.'
-          default: nucleotide
-      type: object
-      required:
-      - file
-      title: Body_handle_v2_screen_fasta_v2_screen_post
-    Body_Create_or_Update_a_Note_v2_notes_post:
-      properties:
-        screen_id:
-          type: string
-          title: Screen Id
-        content:
-          title: Content
-          type:
-          - string
-          - 'null'
-        note_id:
-          title: Note Id
-          type:
-          - string
-          - 'null'
-        decision_status:
-          anyOf:
-          - $ref: '#/components/schemas/DecisionStatus'
-          - type: 'null'
-      type: object
-      required:
-      - screen_id
-      title: Body_Create_or_Update_a_Note_v2_notes_post
-    GeneOntology:
-      properties:
-        name:
-          type: string
-          title: Name
-        definition:
-          type: string
-          title: Definition
-      type: object
-      required:
-      - name
-      - definition
-      title: GeneOntology
     CustomerNote:
       properties:
         note_id:
@@ -1546,203 +1479,28 @@ components:
       - note_id
       - created_at
       title: CustomerNote
-    DecisionStatus:
-      type: string
-      enum:
-      - awaiting
-      - approved
-      - rejected
-      - escalated
-      title: DecisionStatus
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    Body_Initiate_Screen__Inline__v2_screen_inline_post:
+    Body_Create_customer_v2_customers_post:
       properties:
         name:
-          title: Upload Name
-          description: A display label that's useful for you to identify this screen. Unused by Aclid.
-          examples:
-          - 'Order #123456'
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        sequences:
-          items:
-            $ref: '#/components/schemas/ScreenInputSequence'
-          type: array
-          title: Sequences
-        idempotence_key:
-          title: Idempotence Key
-          description: Optional. Within any 24-hour window, the first screen request with a given idempotence key will be processed normally. However, subsequent screen requests (within 24 hours) with the same idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected (HTTP 303) to the original screen's summary.
-          examples:
-          - 4202ba63-5122-4904-b2d8-a3cbf81692de
-          type:
-          - string
-          - 'null'
-          maxLength: 60
-        asynchronous:
-          type: boolean
-          title: Asynchronous
-          description: Set asynchronous to false for real-time screening results
-          default: true
-        verification_success_url:
-          title: Verification Success Url
-          description: URL to redirect to after verification is completed
-          type:
-          - string
-          - 'null'
-        frameworks:
-          title: Frameworks
-          description: "Default: `['us_ccl_export_control', 'eu_dual_use_export_control', 'us_select_agent', 'us_screening_framework']`.\n\nList of frameworks to screen sequences against.\n\n Please refer to [this](#tag/Compliance-Reason-Codes) list of available frameworks. Reach out to us if you'd like to add a framework not currently available in the list above or if you'd like to use custom criteria exclusive to your account."
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        requester_id:
-          title: The associated requester id for this screen.
-          type:
-          - string
-          - 'null'
-          maxLength: 100
-        sequence_type:
-          $ref: '#/components/schemas/SequenceType'
-          title: Sequence Type
-          description: 'The type of the submitted sequences: `nucleotide` (default) or `amino_acid`. All sequences in a single screen must be of the same type.'
-          default: nucleotide
-      type: object
-      required:
-      - sequences
-      title: Body_Initiate_Screen__Inline__v2_screen_inline_post
-    ReportsResponse:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/ReportMetadata'
-          type: array
-          title: Items
-        next_cursor:
-          title: Next Cursor
-          type:
-          - string
-          - 'null'
-      type: object
-      required:
-      - items
-      title: ReportsResponse
-    MatchGroup:
-      properties:
-        matches:
-          items:
-            $ref: '#/components/schemas/Match'
-          type: array
-          title: Alignments
-          description: List of alignments to each sequence.
-        findings:
-          title: Regulatory Concerns
-          description: Map of regulatory concerns for an alignment. See compliance reason codes above.
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/Finding'
-        regulatory_status:
-          anyOf:
-          - $ref: '#/components/schemas/RegulatoryStatus'
-          - type: 'null'
-          title: Regulatory Status
-          description: Summary of the regulatory concerns. Use this field to quickly determine whether a compliance action is needed.
-      type: object
-      required:
-      - matches
-      - findings
-      - regulatory_status
-      title: MatchGroup
-    GrantDoc:
-      properties:
-        id:
           type: string
-          title: Id
-        grant_id:
+          title: Name
+        company:
           type: string
-          title: Grant Id
-        start_date:
-          title: Start Date
-          examples:
-          - 1620060337
-          type:
-          - string
-          - 'null'
-          format: date-time
-        end_date:
-          title: End Date
-          examples:
-          - 1620060337
-          type:
-          - string
-          - 'null'
-          format: date-time
-        office_agency_name:
-          title: Office Agency Name
-          type:
-          - string
-          - 'null'
-        recipient_name:
-          title: Recipient Name
-          type:
-          - string
-          - 'null'
-        recipient_address:
-          title: Recipient Address
-          type:
-          - string
-          - 'null'
-        description:
-          title: Description
-          type:
-          - string
-          - 'null'
+          title: Company
+        address:
+          type: string
+          title: Address
+        country:
+          type: string
+          title: Country
+        screen_id:
+          type: string
+          title: Screen Id
       type: object
       required:
-      - id
-      - grant_id
-      - start_date
-      - end_date
-      title: GrantDoc
+      - name
+      - company
+      title: Body_Create_customer_v2_customers_post
     ReportMetadata:
       properties:
         id:
@@ -1874,37 +1632,269 @@ components:
       - findings
       - regulatory_status
       title: ReportMetadata
-    StreamReportResponse:
+    SequenceType:
+      type: string
+      enum:
+      - nucleotide
+      - amino_acid
+      title: SequenceType
+    MatchGroup:
       properties:
-        url:
-          type: string
-          title: Url
+        matches:
+          items:
+            $ref: '#/components/schemas/Match'
+          type: array
+          title: Alignments
+          description: List of alignments to each sequence.
+        findings:
+          title: Regulatory Concerns
+          description: Map of regulatory concerns for an alignment. See compliance reason codes above.
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/Finding'
+        regulatory_status:
+          anyOf:
+          - $ref: '#/components/schemas/RegulatoryStatus'
+          - type: 'null'
+          title: Regulatory Status
+          description: Summary of the regulatory concerns. Use this field to quickly determine whether a compliance action is needed.
       type: object
       required:
-      - url
-      title: StreamReportResponse
-    Body_Create_customer_v2_customers_post:
+      - matches
+      - findings
+      - regulatory_status
+      title: MatchGroup
+    VerificationStatus:
+      type: string
+      enum:
+      - submitted
+      - partially_submitted
+      - missing_verification
+      - not_required
+      title: VerificationStatus
+    MaterialSummary:
+      properties:
+        control_type:
+          title: Control Type
+          description: type of controlled material eg. virus
+          type:
+          - string
+          - 'null'
+        coverage:
+          title: Coverage
+          description: Coverage of this material in the regulatory status
+          type:
+          - number
+          - 'null'
+        unique_coverage:
+          title: Unique Coverage
+          description: Coverage of this material from sequences unique to this material
+          type:
+          - number
+          - 'null'
+        total_sequences:
+          type: integer
+          title: Total Sequence
+          description: Total sequences for this material in the regulatory status
+        risk_factors:
+          anyOf:
+          - $ref: '#/components/schemas/RiskFactors'
+          - type: 'null'
+          title: Risk Factors
+          description: Risk indicators computed from hits associated with this material
+      type: object
+      required:
+      - total_sequences
+      title: MaterialSummary
+    DecisionStatus:
+      type: string
+      enum:
+      - awaiting
+      - approved
+      - rejected
+      - escalated
+      title: DecisionStatus
+    CustomerScreen:
+      properties:
+        name:
+          title: Name
+          type:
+          - string
+          - 'null'
+        address:
+          title: Address
+          type:
+          - string
+          - 'null'
+        company:
+          title: Company
+          type:
+          - string
+          - 'null'
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        status:
+          title: Status
+          type:
+          - string
+          - 'null'
+        requester_id:
+          type: string
+          title: Requester Id
+        decision_status:
+          $ref: '#/components/schemas/DecisionStatus'
+        sanctions_count:
+          title: Sanctions Count
+          type:
+          - integer
+          - 'null'
+        kyc_latest:
+          title: Kyc Latest
+          type:
+          - string
+          - 'null'
+          format: date-time
+        kyc_flags_count:
+          title: Kyc Flags Count
+          type:
+          - integer
+          - 'null'
+      type: object
+      required:
+      - created_at
+      - requester_id
+      - decision_status
+      title: CustomerScreen
+    Body_Initiate_Screen__Inline__v2_screen_inline_post:
+      properties:
+        name:
+          title: Upload Name
+          description: A display label that's useful for you to identify this screen. Unused by Aclid.
+          examples:
+          - 'Order #123456'
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        sequences:
+          items:
+            $ref: '#/components/schemas/ScreenInputSequence'
+          type: array
+          title: Sequences
+        idempotence_key:
+          title: Idempotence Key
+          description: Optional. Within any 24-hour window, the first screen request with a given idempotence key will be processed normally. However, subsequent screen requests (within 24 hours) with the same idempotence key will not be re-assessed. Instead, those subsequent requests will be redirected (HTTP 303) to the original screen's summary.
+          examples:
+          - 4202ba63-5122-4904-b2d8-a3cbf81692de
+          type:
+          - string
+          - 'null'
+          maxLength: 60
+        asynchronous:
+          type: boolean
+          title: Asynchronous
+          description: Set asynchronous to false for real-time screening results
+          default: true
+        verification_success_url:
+          title: Verification Success Url
+          description: URL to redirect to after verification is completed
+          type:
+          - string
+          - 'null'
+        frameworks:
+          title: Frameworks
+          description: "Default: `['us_ccl_export_control', 'eu_dual_use_export_control', 'us_select_agent', 'us_screening_framework']`.\n\nList of frameworks to screen sequences against.\n\n Please refer to [this](#tag/Compliance-Reason-Codes) list of available frameworks. Reach out to us if you'd like to add a framework not currently available in the list above or if you'd like to use custom criteria exclusive to your account."
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        requester_id:
+          title: The associated requester id for this screen.
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        sequence_type:
+          $ref: '#/components/schemas/SequenceType'
+          title: Sequence Type
+          description: 'The type of the submitted sequences: `nucleotide` (default) or `amino_acid`. All sequences in a single screen must be of the same type.'
+          default: nucleotide
+      type: object
+      required:
+      - sequences
+      title: Body_Initiate_Screen__Inline__v2_screen_inline_post
+    GeneOntology:
       properties:
         name:
           type: string
           title: Name
-        company:
+        definition:
           type: string
-          title: Company
-        address:
-          type: string
-          title: Address
-        country:
-          type: string
-          title: Country
-        screen_id:
-          type: string
-          title: Screen Id
+          title: Definition
       type: object
       required:
       - name
-      - company
-      title: Body_Create_customer_v2_customers_post
+      - definition
+      title: GeneOntology
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Followup:
+      properties:
+        metadata:
+          type: string
+          title: Metadata
+          examples:
+          - '{"research_purpose": "The Research Purpose is this", "contact_name": "The Contact Name", "contact_email": "someone@email.com"}'
+        created_at:
+          type: integer
+          title: Created At
+          examples:
+          - 1620060337
+        completed_at:
+          type: integer
+          title: Completed At
+          examples:
+          - 1620060337
+        documentation_url:
+          title: Documentation Url
+          examples:
+          - https://aclid.bio/somefile.pdf
+          type:
+          - string
+          - 'null'
+        grant_docs:
+          items:
+            $ref: '#/components/schemas/GrantDoc'
+          type: array
+          title: Grant Docs
+      type: object
+      required:
+      - created_at
+      - grant_docs
+      title: Followup
+    FollowupURLCreateResponse:
+      properties:
+        url:
+          type: string
+          title: Url
+          examples:
+          - https://verify.aclid.bio/?access_token=aclid-access-1234
+      type: object
+      required:
+      - url
+      title: FollowupURLCreateResponse
     SanctionScreenCreateResponse:
       properties:
         requester_id:
@@ -1918,12 +1908,22 @@ components:
       - requester_id
       - status
       title: SanctionScreenCreateResponse
-    RegulatoryStatus:
-      type: string
-      enum:
-      - controlled
-      - not_controlled
-      title: RegulatoryStatus
+    ReportsResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ReportMetadata'
+          type: array
+          title: Items
+        next_cursor:
+          title: Next Cursor
+          type:
+          - string
+          - 'null'
+      type: object
+      required:
+      - items
+      title: ReportsResponse
 x-tagGroups:
 - name: Getting Started
   tags:
