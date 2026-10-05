@@ -1,0 +1,12 @@
+{
+ "url": "https://api.aclid.bio/openapi.json",
+ "requested_url": "https://api.aclid.bio/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 67079,
+ "sha256": "f1c5e344f3394495ae05ed7559c07a37ce5112805db5a73f1ea67fa1b4082547",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
